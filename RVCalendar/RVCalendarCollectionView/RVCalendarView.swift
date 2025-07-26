@@ -1,0 +1,98 @@
+//
+//  RVCalendarView.swift
+//  RVCalendar
+//
+//  Created by RV on 26/07/25.
+//
+
+import UIKit
+
+class RVCalendarView: UIView {
+    @IBOutlet weak var contentView: UIView!
+    @IBOutlet weak var viewBaseBackground: UIView?
+    @IBOutlet weak var calendarView: CollectionViewCalendar?
+    @IBOutlet weak var labelCurrentMonth: UILabel?
+    @IBOutlet weak var labelPreviousMonth: UILabel?
+    @IBOutlet weak var labelNextMonth: UILabel?
+    @IBOutlet weak var buttonPreviousMonth: UIButton?
+    @IBOutlet weak var buttonNextMonth: UIButton?
+    
+    
+    private var selectedDate = Date()
+    private var totalDays = [String]()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        loadFromNib()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        loadFromNib()
+    }
+    
+    private func loadFromNib() {
+        Bundle.main.loadNibNamed("RVCalendarView", owner: self, options: nil)
+        guard let contentView = contentView else {
+            fatalError("contentView not connected")
+        }
+        
+        contentView.frame = bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(contentView)
+        commonSetup()
+    }
+    
+    
+    func commonSetup() {
+        calendarView?.setupCollectionView()
+        calendarView?.calendarDelegate = self
+        buttonNextMonth?.contentHorizontalAlignment = .right
+        buttonPreviousMonth?.contentHorizontalAlignment = .left
+        viewBaseBackground?.clipsToBounds = true
+        viewBaseBackground?.layer.borderWidth = 1.0
+        viewBaseBackground?.layer.borderColor = UIColor.gray.cgColor
+        viewBaseBackground?.layer.cornerRadius = 20.0
+        setupCalendarHeaders() 
+    }
+    
+    func setupCalendarHeaders() {
+        let monthLabelText = CalendarHelper().monthYearString(date: selectedDate)
+        let previousMonth = CalendarHelper.shared.getPreviousMonth(from: selectedDate)
+        let previousMonthText = CalendarHelper().monthName(from: previousMonth)
+        let nextMonth = CalendarHelper.shared.getNextMonth(from: selectedDate)
+        let nextMonthText = CalendarHelper().monthName(from: nextMonth)
+        
+        labelPreviousMonth?.text = previousMonthText
+        labelCurrentMonth?.text = monthLabelText
+        labelNextMonth?.text = nextMonthText
+    }
+    
+    @IBAction func buttonPreviousMonth(_ sender: Any) {
+        calendarView?.goToPreviousMonth()
+    }
+    
+    @IBAction func buttonNextMonth(_ sender: Any) {
+        calendarView?.goToNextMonth()
+    }
+    
+    func setDateSelectorColor(colorName: UIColor) {
+        calendarView?.setDateSelectionColor(colorName: colorName)
+    }
+}
+
+extension RVCalendarView: CalendarCollectionDelegate {
+    func currentMonth(nameText: String) {
+        labelCurrentMonth?.text = nameText
+    }
+    
+    func nextMonth(nameText: String) {
+        labelNextMonth?.text = nameText
+    }
+    
+    func previousMonth(nameText: String) {
+        labelPreviousMonth?.text = nameText
+    }
+    
+    
+}
