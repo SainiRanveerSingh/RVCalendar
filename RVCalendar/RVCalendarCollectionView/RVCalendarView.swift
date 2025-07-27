@@ -17,7 +17,6 @@ class RVCalendarView: UIView {
     @IBOutlet weak var buttonPreviousMonth: UIButton?
     @IBOutlet weak var buttonNextMonth: UIButton?
     
-    
     private var selectedDate = Date()
     private var totalDays = [String]()
 
@@ -41,8 +40,7 @@ class RVCalendarView: UIView {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(contentView)
         commonSetup()
-    }
-    
+    }    
     
     func commonSetup() {
         calendarView?.setupCollectionView()
@@ -91,6 +89,10 @@ extension RVCalendarView: CalendarCollectionDelegate {
     
     func previousMonth(nameText: String) {
         labelPreviousMonth?.text = nameText
+    }
+    
+    func dateSelected(dateString: String) {
+        print(dateString)
     }
     
 }

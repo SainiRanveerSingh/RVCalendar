@@ -11,12 +11,14 @@ protocol CalendarCollectionDelegate {
     func currentMonth(nameText: String)
     func nextMonth(nameText: String)
     func previousMonth(nameText: String)
+    func dateSelected(dateString: String)
 }
 
 class CollectionViewCalendar:  UICollectionView {
     
     private var selectedDate = Date()
     private var totalDays = [String]()
+    var datesInMonth: [Date?] = []
     var calendarDelegate: CalendarCollectionDelegate?
     
     var dateSelectionColor = UIColor.white
@@ -65,6 +67,7 @@ class CollectionViewCalendar:  UICollectionView {
     
     func setupMonthView() {
         totalDays.removeAll()
+        datesInMonth.removeAll()
         cellSelectedToHighlight = -1
         
         let daysInMonth = CalendarHelper().daysInMonth(date: selectedDate)
@@ -75,8 +78,17 @@ class CollectionViewCalendar:  UICollectionView {
         while count <= 42 {
             if count <= startingSpaces || count - startingSpaces > daysInMonth {
                 totalDays.append("")
+                datesInMonth.append(nil) // blank cell
             } else {
-                totalDays.append("\(count - startingSpaces)")
+                //totalDays.append("\(count - startingSpaces)")
+                let day = count - startingSpaces
+                totalDays.append("\(day)")
+                
+                if let validDate = CalendarHelper().calendar.date(byAdding: .day, value: day - 1, to: firstDay) {
+                    datesInMonth.append(validDate) // actual Date
+                } else {
+                    datesInMonth.append(nil)
+                }
             }
             count += 1
         }
@@ -131,7 +143,7 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.item)
+        //print(indexPath.item)
         if let cell = collectionView.cellForItem(at: indexPath) as? RVCalendarCollectionViewCell {
             if cell.labelDate.text != "" {
                 cellSelectedToHighlight = indexPath.item
@@ -139,6 +151,9 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
                 cell.viewDateLabelSelection.clipsToBounds = true
                 cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
                 cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+                let selectedDateValue = getDateForSelectedCell(atIndex: indexPath.item)
+                //print("Selected Date: \(selectedDateValue)")
+                calendarDelegate?.dateSelected(dateString: selectedDateValue)
             }
         }
     }
@@ -150,6 +165,26 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
             cell.labelDate.textColor = .black
             cell.viewDateLabelSelection.backgroundColor = .white
         }
+    }
+    
+    func getDateForSelectedCell(atIndex: Int) -> String {
+        let day = Int(totalDays[atIndex])!
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: selectedDate)
+        
+        var dateComponents = DateComponents()
+        dateComponents.year = components.year
+        dateComponents.month = components.month
+        dateComponents.day = day
+        
+        if let fullDate = calendar.date(from: dateComponents) {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "dd/MM/yyyy"
+            //print("Selected Date: \(formatter.string(from: fullDate))")
+            return formatter.string(from: fullDate)
+        }
+        
+        return ""
     }
     
 }
