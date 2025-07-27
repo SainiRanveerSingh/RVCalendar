@@ -81,6 +81,18 @@ class CollectionViewCalendar:  UICollectionView {
         self.reloadData()
     }
     
+    func goToNextWeek() {
+        guard let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: selectedStartDate) else { return }
+        selectedStartDate = nextWeek
+        self.setupWeekView()
+    }
+
+    func goToPreviousWeek() {
+        guard let previousWeek = Calendar.current.date(byAdding: .day, value: -7, to: selectedStartDate) else { return }
+        selectedStartDate = previousWeek
+        self.setupWeekView()
+    }
+    
     //------ Calendar As Month View ------
     func setupCollectionViewLayout() {
         let layout = UICollectionViewFlowLayout()
@@ -152,18 +164,7 @@ class CollectionViewCalendar:  UICollectionView {
         selectedDate = CalendarHelper().plusMonth(date: selectedDate)
         setupMonthView()
     }
-    
-    func goToNextWeek() {
-        guard let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: selectedStartDate) else { return }
-        selectedStartDate = nextWeek
-        self.setupWeekView()
-    }
 
-    func goToPreviousWeek() {
-        guard let previousWeek = Calendar.current.date(byAdding: .day, value: -7, to: selectedStartDate) else { return }
-        selectedStartDate = previousWeek
-        self.setupWeekView()
-    }
     
 }
 
@@ -245,13 +246,9 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
 // MARK: - UICollectionViewDelegateFlowLayout
 extension CollectionViewCalendar: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if calendarViewType == .WeekView {
-            let width = (collectionView.frame.width - 2) / 7
-            return CGSize(width: width, height: collectionView.frame.height)
-        } else {
+        //----- Common Cell Size Setup For Both View Type -----
             let width = (collectionView.frame.width - 2) / 7
             let height = (collectionView.frame.height - 2) / 6
             return CGSize(width: width, height: height)
-        }
     }
 }

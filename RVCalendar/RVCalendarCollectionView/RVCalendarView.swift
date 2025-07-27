@@ -16,6 +16,7 @@ class RVCalendarView: UIView {
     @IBOutlet weak var labelNextMonth: UILabel?
     @IBOutlet weak var buttonPreviousMonth: UIButton?
     @IBOutlet weak var buttonNextMonth: UIButton?
+
     
     private var selectedDate = Date()
     private var totalDays = [String]()
@@ -43,9 +44,9 @@ class RVCalendarView: UIView {
     }
     
     func commonSetup() {
+        calendarView?.calendarViewType = .WeekView
         calendarView?.setupCollectionView()
         calendarView?.calendarDelegate = self
-        calendarView?.calendarViewType = .WeekView
         viewBaseBackground?.clipsToBounds = true
         viewBaseBackground?.layer.borderWidth = 1.0
         viewBaseBackground?.layer.borderColor = UIColor.gray.cgColor

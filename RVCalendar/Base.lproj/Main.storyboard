@@ -17,8 +17,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="suK-Ju-r2K" customClass="RVCalendarView" customModule="RVCalendar" customModuleProvider="target">
-                                <rect key="frame" x="20" y="59" width="353" height="432"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <rect key="frame" x="20" y="99" width="353" height="432"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="432" id="WcC-fY-SLj"/>
                                 </constraints>
@@ -26,17 +26,31 @@
                                     <outlet property="viewBaseBackground" destination="8bC-Xf-vdC" id="LDs-8w-6mV"/>
                                 </connections>
                             </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="a2G-87-pQN">
+                                <rect key="frame" x="288.66666666666669" y="63" width="84.333333333333314" height="32"/>
+                                <segments>
+                                    <segment title="" image="list.bullet.rectangle" catalog="system"/>
+                                    <segment title="" image="calendar" catalog="system"/>
+                                </segments>
+                                <connections>
+                                    <action selector="buttonSegmentChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="zgv-3z-UUG"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="a2G-87-pQN" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="4" id="2gY-qN-kjj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="a2G-87-pQN" secondAttribute="trailing" constant="20" id="4Vh-9H-11v"/>
                             <constraint firstItem="suK-Ju-r2K" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Jpe-dG-dGF"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="suK-Ju-r2K" secondAttribute="trailing" constant="20" id="KCc-Qo-YYv"/>
-                            <constraint firstItem="suK-Ju-r2K" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="ltZ-Sc-Jhk"/>
+                            <constraint firstItem="suK-Ju-r2K" firstAttribute="top" secondItem="a2G-87-pQN" secondAttribute="bottom" constant="5" id="KtQ-aT-ghx"/>
+                            <constraint firstItem="suK-Ju-r2K" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="ltZ-Sc-Jhk"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="rvCalendarView" destination="suK-Ju-r2K" id="dTS-QN-6Dr"/>
+                        <outlet property="rvCalendarViewHeightConstraint" destination="WcC-fY-SLj" id="3fU-Lc-R22"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -45,6 +59,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="calendar" catalog="system" width="128" height="107"/>
+        <image name="list.bullet.rectangle" catalog="system" width="128" height="93"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
