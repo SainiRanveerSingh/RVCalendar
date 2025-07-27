@@ -15,10 +15,23 @@ protocol CalendarCollectionDelegate {
 }
 
 class CollectionViewCalendar:  UICollectionView {
+    enum CalendarViewType {
+        case MonthView
+        case WeekView
+    }
+    var calendarViewType: CalendarViewType = .MonthView
     
+    //------- Calendar Month View -------
     private var selectedDate = Date()
     private var totalDays = [String]()
     var datesInMonth: [Date?] = []
+    //------- Calendar Month View -------
+    
+    //------- Calendar Week View -------
+    var selectedStartDate: Date = CalendarHelper().startOfWeek(from: Date())
+    var weekDates: [Date] = []
+    //------- Calendar Week View -------
+    
     var calendarDelegate: CalendarCollectionDelegate?
     
     var dateSelectionColor = UIColor.white
@@ -44,7 +57,11 @@ class CollectionViewCalendar:  UICollectionView {
         //Cell registration
         let nib = UINib.init(nibName: "RVCalendarCollectionViewCell", bundle: nil)
         self.register(nib, forCellWithReuseIdentifier: "RVCalendarCollectionViewCell")
-        setupMonthView()
+        if calendarViewType == .WeekView {
+            setupWeekView()
+        } else {
+            setupMonthView()
+        }
         setupCollectionViewLayout()
     }
     
@@ -52,6 +69,19 @@ class CollectionViewCalendar:  UICollectionView {
         dateSelectionColor = colorName
     }
     
+    //------ Calendar As Week View ------
+    func setupWeekView() {
+        weekDates.removeAll()
+        for i in 0..<7 {
+            if let date = Calendar.current.date(byAdding: .day, value: i, to: selectedStartDate) {
+                weekDates.append(date)
+            }
+        }
+        
+        self.reloadData()
+    }
+    
+    //------ Calendar As Month View ------
     func setupCollectionViewLayout() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
@@ -122,22 +152,45 @@ class CollectionViewCalendar:  UICollectionView {
         selectedDate = CalendarHelper().plusMonth(date: selectedDate)
         setupMonthView()
     }
+    
+    func goToNextWeek() {
+        guard let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: selectedStartDate) else { return }
+        selectedStartDate = nextWeek
+        self.setupWeekView()
+    }
+
+    func goToPreviousWeek() {
+        guard let previousWeek = Calendar.current.date(byAdding: .day, value: -7, to: selectedStartDate) else { return }
+        selectedStartDate = previousWeek
+        self.setupWeekView()
+    }
+    
 }
 
 // MARK: - UICollectionViewDataSource
 extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return totalDays.count
+        if calendarViewType == .WeekView {
+            return weekDates.count
+        } else {
+            return totalDays.count
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
-        
-        cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
-        if cellSelectedToHighlight != -1 {
-            cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+        if calendarViewType == .WeekView {
+            let date = weekDates[indexPath.item]
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d"
+            cell.labelDate.text = formatter.string(from: date)
         } else {
-            cell.viewDateLabelSelection.backgroundColor = .white
+            cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
+            if cellSelectedToHighlight != -1 {
+                cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+            } else {
+                cell.viewDateLabelSelection.backgroundColor = .white
+            }
         }
         return cell
     }
@@ -192,8 +245,13 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
 // MARK: - UICollectionViewDelegateFlowLayout
 extension CollectionViewCalendar: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 2) / 7
-        let height = (collectionView.frame.height - 2) / 6
-        return CGSize(width: width, height: height)
+        if calendarViewType == .WeekView {
+            let width = (collectionView.frame.width - 2) / 7
+            return CGSize(width: width, height: collectionView.frame.height)
+        } else {
+            let width = (collectionView.frame.width - 2) / 7
+            let height = (collectionView.frame.height - 2) / 6
+            return CGSize(width: width, height: height)
+        }
     }
 }

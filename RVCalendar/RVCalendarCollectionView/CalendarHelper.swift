@@ -26,7 +26,13 @@ class CalendarHelper {
         let components = calendar.dateComponents([.year, .month], from: date)
         return calendar.date(from: components) ?? Date()
     }
-
+    
+    func startOfWeek(from date: Date) -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        return calendar.date(from: components)!
+    }
+    
     func weekDay(date: Date) -> Int {
         calendar.component(.weekday, from: date) - 1
     }

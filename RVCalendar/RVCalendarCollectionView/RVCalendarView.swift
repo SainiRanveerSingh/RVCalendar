@@ -40,11 +40,12 @@ class RVCalendarView: UIView {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(contentView)
         commonSetup()
-    }    
+    }
     
     func commonSetup() {
         calendarView?.setupCollectionView()
         calendarView?.calendarDelegate = self
+        calendarView?.calendarViewType = .WeekView
         viewBaseBackground?.clipsToBounds = true
         viewBaseBackground?.layer.borderWidth = 1.0
         viewBaseBackground?.layer.borderColor = UIColor.gray.cgColor
