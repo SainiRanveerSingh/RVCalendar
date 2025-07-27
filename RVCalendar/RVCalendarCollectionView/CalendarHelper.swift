@@ -52,5 +52,22 @@ class CalendarHelper {
     func getNextMonth(from date: Date) -> Date {
         return calendar.date(byAdding: .month, value: 1, to: date)!
     }
+    
+    func numberOfWeeksInMonth(for date: Date) -> Int {
+        let calendar = Calendar.current
+        let range = calendar.range(of: .day, in: .month, for: date)!
+        let totalDays = range.count
+
+        let firstDayOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: date))!
+        let weekday = calendar.component(.weekday, from: firstDayOfMonth) // Sunday = 1
+
+        let offset = weekday - calendar.firstWeekday
+        let leadingEmptyDays = offset < 0 ? 7 + offset : offset
+
+        let totalCells = totalDays + leadingEmptyDays
+        let numberOfWeeks = Int(ceil(Double(totalCells) / 7.0))
+
+        return numberOfWeeks
+    }
 
 }

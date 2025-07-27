@@ -47,8 +47,6 @@ class RVCalendarView: UIView {
     func commonSetup() {
         calendarView?.setupCollectionView()
         calendarView?.calendarDelegate = self
-        buttonNextMonth?.contentHorizontalAlignment = .right
-        buttonPreviousMonth?.contentHorizontalAlignment = .left
         viewBaseBackground?.clipsToBounds = true
         viewBaseBackground?.layer.borderWidth = 1.0
         viewBaseBackground?.layer.borderColor = UIColor.gray.cgColor
@@ -82,6 +80,7 @@ class RVCalendarView: UIView {
 }
 
 extension RVCalendarView: CalendarCollectionDelegate {
+    
     func currentMonth(nameText: String) {
         labelCurrentMonth?.text = nameText
     }
@@ -93,6 +92,5 @@ extension RVCalendarView: CalendarCollectionDelegate {
     func previousMonth(nameText: String) {
         labelPreviousMonth?.text = nameText
     }
-    
     
 }

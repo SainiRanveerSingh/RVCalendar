@@ -10,11 +10,11 @@ import UIKit
 class RVCalendarCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var viewMainCellBackground: UIView!
-    @IBOutlet weak var newDateLabelBackgroundView: UIView!
+    @IBOutlet weak var viewDateLabelSelection: UIView!
     @IBOutlet weak var viewDateLabelBackground: UIView!
     @IBOutlet weak var labelDate: UILabel!
     @IBOutlet weak var viewToShowFourEventDots: UIView!
-    //@IBOutlet weak var imageViewForDate: UIImageView!
+    @IBOutlet weak var imageViewDateHighlighter: UIImageView!
     var cellColor = UIColor.white
     
     override func awakeFromNib() {
@@ -32,6 +32,7 @@ class RVCalendarCollectionViewCell: UICollectionViewCell {
         labelDate.tag = 1000 + index
         viewDateLabelBackground.tag = 2000 + index
         viewToShowFourEventDots.tag = 3000 + index
+        imageViewDateHighlighter.tag = 4000 + index
     }
     
 }

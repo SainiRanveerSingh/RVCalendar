@@ -11,7 +11,6 @@ protocol CalendarCollectionDelegate {
     func currentMonth(nameText: String)
     func nextMonth(nameText: String)
     func previousMonth(nameText: String)
-    
 }
 
 class CollectionViewCalendar:  UICollectionView {
@@ -19,8 +18,6 @@ class CollectionViewCalendar:  UICollectionView {
     private var selectedDate = Date()
     private var totalDays = [String]()
     var calendarDelegate: CalendarCollectionDelegate?
-    
-    var onMonthChanged: (() -> Void)?
     
     var dateSelectionColor = UIColor.white
     var cellSelectedToHighlight = -1
@@ -93,7 +90,15 @@ class CollectionViewCalendar:  UICollectionView {
         calendarDelegate?.previousMonth(nameText: previousMonthText)
         calendarDelegate?.currentMonth(nameText: monthLabelText)
         calendarDelegate?.nextMonth(nameText: nextMonthText)
+        
         self.reloadData()
+    }
+    
+    func calculateCalendarHeight(for date: Date) -> CGFloat {
+        let weeks = CalendarHelper.shared.numberOfWeeksInMonth(for: date)
+        let rowHeight: CGFloat = 40 // Or whatever your cell height is
+        let totalHeight = CGFloat(weeks) * rowHeight
+        return totalHeight
     }
     
     func goToPreviousMonth() {
@@ -118,9 +123,9 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
         
         cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
         if cellSelectedToHighlight != -1 {
-            cell.viewDateLabelBackground.backgroundColor = dateSelectionColor
+            cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
         } else {
-            //cell.viewDateLabelBackground.backgroundColor = .white
+            cell.viewDateLabelSelection.backgroundColor = .white
         }
         return cell
     }
@@ -128,26 +133,22 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print(indexPath.item)
         if let cell = collectionView.cellForItem(at: indexPath) as? RVCalendarCollectionViewCell {
-            cell.viewDateLabelBackground.backgroundColor = dateSelectionColor
-            cellSelectedToHighlight = indexPath.item
-            
-            //cell.labelDate.backgroundColor = dateSelectionColor
-            cell.newDateLabelBackgroundView.clipsToBounds = true
-            cell.newDateLabelBackgroundView.layer.cornerRadius = cell.newDateLabelBackgroundView.frame.height / 2.0
-            cell.newDateLabelBackgroundView.backgroundColor = dateSelectionColor
-            
-            
-            print(cell.labelDate.frame)
+            if cell.labelDate.text != "" {
+                cellSelectedToHighlight = indexPath.item
+                
+                cell.viewDateLabelSelection.clipsToBounds = true
+                cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
+                cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+            }
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         print(indexPath.item)
         if let cell = collectionView.cellForItem(at: indexPath) as? RVCalendarCollectionViewCell {
-            cell.viewDateLabelBackground.backgroundColor = .white
             cellSelectedToHighlight = -1
             cell.labelDate.textColor = .black
-            cell.newDateLabelBackgroundView.backgroundColor = .white
+            cell.viewDateLabelSelection.backgroundColor = .white
         }
     }
     

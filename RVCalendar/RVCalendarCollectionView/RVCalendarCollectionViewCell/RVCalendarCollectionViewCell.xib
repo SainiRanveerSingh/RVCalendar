@@ -87,9 +87,10 @@
             </constraints>
             <size key="customSize" width="193" height="188"/>
             <connections>
+                <outlet property="imageViewDateHighlighter" destination="MhW-Tn-RKv" id="t0d-8x-7tX"/>
                 <outlet property="labelDate" destination="RIS-yg-0DM" id="PyI-JK-WZH"/>
-                <outlet property="newDateLabelBackgroundView" destination="p33-RG-ifT" id="pSV-DV-CgW"/>
                 <outlet property="viewDateLabelBackground" destination="TzW-Ab-ycT" id="iSk-AJ-3uQ"/>
+                <outlet property="viewDateLabelSelection" destination="p33-RG-ifT" id="T7t-C0-0cb"/>
                 <outlet property="viewMainCellBackground" destination="HrI-t7-P1a" id="Zdf-xf-wJC"/>
                 <outlet property="viewToShowFourEventDots" destination="wdj-Sd-2VK" id="3q2-DK-4WE"/>
             </connections>
