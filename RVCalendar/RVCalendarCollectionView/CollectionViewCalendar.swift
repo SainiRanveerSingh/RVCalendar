@@ -16,27 +16,27 @@ protocol CalendarCollectionDelegate {
 
 class CollectionViewCalendar:  UICollectionView {
     enum CalendarViewType {
-        case MonthView
-        case WeekView
+        case monthView
+        case weekView
     }
-    var calendarViewType: CalendarViewType = .MonthView
+    private var calendarViewType: CalendarViewType = .monthView
     
     //------- Calendar Month View -------
     private var selectedDate = Date()
     private var totalDays = [String]()
-    var datesInMonth: [Date?] = []
+    private var datesInMonth: [Date?] = []
     //------- Calendar Month View -------
     
     //------- Calendar Week View -------
-    var selectedStartDate: Date = CalendarHelper().startOfWeek(from: Date())
-    var weekDates: [Date] = []
+    private var selectedStartDate: Date = CalendarHelper().startOfWeek(from: Date())
+    private var weekDates: [Date] = []
     //------- Calendar Week View -------
     
+    private var cellSelectedToHighlight = -1
+    
     var calendarDelegate: CalendarCollectionDelegate?
-    
     var dateSelectionColor = UIColor.white
-    var cellSelectedToHighlight = -1
-    
+
     var nextMonthName: String {
         let nextDate = CalendarHelper.shared.getNextMonth(from: selectedDate)
         return CalendarHelper.shared.monthName(from: nextDate)
@@ -51,13 +51,14 @@ class CollectionViewCalendar:  UICollectionView {
         super.awakeFromNib()
     }
     
-    func setupCollectionView() {
+    func setupCollectionView(viewType: CalendarViewType) {
         self.delegate = self
         self.dataSource = self
         //Cell registration
         let nib = UINib.init(nibName: "RVCalendarCollectionViewCell", bundle: nil)
         self.register(nib, forCellWithReuseIdentifier: "RVCalendarCollectionViewCell")
-        if calendarViewType == .WeekView {
+        calendarViewType = viewType
+        if calendarViewType == .weekView {
             setupWeekView()
         } else {
             setupMonthView()
@@ -171,7 +172,7 @@ class CollectionViewCalendar:  UICollectionView {
 // MARK: - UICollectionViewDataSource
 extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if calendarViewType == .WeekView {
+        if calendarViewType == .weekView {
             return weekDates.count
         } else {
             return totalDays.count
@@ -180,7 +181,7 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
-        if calendarViewType == .WeekView {
+        if calendarViewType == .weekView {
             let date = weekDates[indexPath.item]
             let formatter = DateFormatter()
             formatter.dateFormat = "d"

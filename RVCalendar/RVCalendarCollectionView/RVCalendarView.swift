@@ -44,8 +44,8 @@ class RVCalendarView: UIView {
     }
     
     func commonSetup() {
-        calendarView?.calendarViewType = .WeekView
-        calendarView?.setupCollectionView()
+        //calendarView?.calendarViewType = .monthView
+        calendarView?.setupCollectionView(viewType: .monthView)
         calendarView?.calendarDelegate = self
         viewBaseBackground?.clipsToBounds = true
         viewBaseBackground?.layer.borderWidth = 1.0

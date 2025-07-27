@@ -23,12 +23,15 @@ class ViewController: UIViewController {
         if sender.selectedSegmentIndex == 0 {
             self.rvCalendarViewHeightConstraint?.constant = 180
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                self.view.layoutIfNeeded()            }
+                //self.rvCalendarView?.calendarView?.setupCollectionView(viewType: .weekView)
+                self.view.layoutIfNeeded()
+            }
             
         } else {
             //Month View
             self.rvCalendarViewHeightConstraint?.constant = 432
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
+                //self.rvCalendarView?.calendarView?.setupCollectionView(viewType: .monthView)
                 self.view.layoutIfNeeded()
             }
         }
