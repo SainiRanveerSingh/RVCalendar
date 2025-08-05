@@ -17,16 +17,17 @@
                 <outlet property="labelCurrentMonth" destination="5In-v4-f9K" id="y7p-44-x62"/>
                 <outlet property="labelNextMonth" destination="e76-5e-yFk" id="gZs-fP-Ghp"/>
                 <outlet property="labelPreviousMonth" destination="3rg-Kt-k3S" id="Gch-bS-uR3"/>
+                <outlet property="segmentButtonWeekMonth" destination="fW2-xl-B7L" id="gha-Gm-88V"/>
                 <outlet property="viewBaseBackground" destination="f3H-88-cAV" id="bxq-MT-nDa"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="393" height="423"/>
+            <rect key="frame" x="0.0" y="0.0" width="393" height="453"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f3H-88-cAV">
-                    <rect key="frame" x="16" y="16" width="361" height="391"/>
+                    <rect key="frame" x="16" y="46" width="361" height="391"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Month Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5In-v4-f9K">
                             <rect key="frame" x="128.66666666666666" y="21" width="103.66666666666666" height="20.333333333333329"/>
@@ -35,7 +36,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.left" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="GKl-fb-lvU">
-                            <rect key="frame" x="16" y="24.333333333333336" width="15" height="14.333333333333336"/>
+                            <rect key="frame" x="16" y="24.333333333333329" width="15" height="14.333333333333329"/>
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="15" id="dll-UB-du9"/>
@@ -43,7 +44,7 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Previous" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3rg-Kt-k3S">
-                            <rect key="frame" x="29.999999999999996" y="22.333333333333336" width="60.666666666666657" height="18"/>
+                            <rect key="frame" x="29.999999999999996" y="22.333333333333329" width="60.666666666666657" height="18"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -58,7 +59,7 @@
                             </connections>
                         </button>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="chevron.right" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="a9B-d4-ZVl">
-                            <rect key="frame" x="330" y="24.333333333333336" width="15" height="14.333333333333336"/>
+                            <rect key="frame" x="330" y="24.333333333333329" width="15" height="14.333333333333329"/>
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="18" id="Rja-Le-bht"/>
@@ -66,13 +67,13 @@
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Next" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e76-5e-yFk">
-                            <rect key="frame" x="298.33333333333331" y="22.333333333333336" width="32.666666666666686" height="18"/>
+                            <rect key="frame" x="298.33333333333331" y="22.333333333333329" width="32.666666666666686" height="18"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                             <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gdi-7z-ESL">
-                            <rect key="frame" x="298.33333333333331" y="22.333333333333336" width="37.666666666666686" height="18"/>
+                            <rect key="frame" x="298.33333333333331" y="22.333333333333329" width="37.666666666666686" height="18"/>
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain"/>
@@ -180,22 +181,37 @@
                         <constraint firstItem="WGj-J1-HwN" firstAttribute="centerY" secondItem="5In-v4-f9K" secondAttribute="centerY" id="zQC-vZ-ZLS"/>
                     </constraints>
                 </view>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fW2-xl-B7L">
+                    <rect key="frame" x="276.66666666666669" y="14" width="84.333333333333314" height="31"/>
+                    <segments>
+                        <segment title="" image="list.bullet.rectangle" catalog="system"/>
+                        <segment title="" image="calendar" catalog="system"/>
+                    </segments>
+                    <connections>
+                        <action selector="buttonSegmentChanged:" destination="-1" eventType="touchUpInside" id="4Iy-4T-M1N"/>
+                    </connections>
+                </segmentedControl>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="f3H-88-cAV" secondAttribute="trailing" constant="16" id="CgB-sx-XRA"/>
                 <constraint firstItem="f3H-88-cAV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="H9X-Bf-jpH"/>
-                <constraint firstItem="f3H-88-cAV" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="Wvr-xF-aGI"/>
+                <constraint firstItem="fW2-xl-B7L" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="14" id="S5K-nu-qa1"/>
+                <constraint firstItem="f3H-88-cAV" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="46" id="Wvr-xF-aGI"/>
+                <constraint firstAttribute="trailing" secondItem="fW2-xl-B7L" secondAttribute="trailing" constant="32" id="l37-PB-5mI"/>
                 <constraint firstAttribute="bottom" secondItem="f3H-88-cAV" secondAttribute="bottom" constant="16" id="r33-DJ-hX6"/>
+                <constraint firstItem="f3H-88-cAV" firstAttribute="top" secondItem="fW2-xl-B7L" secondAttribute="bottom" constant="2" id="w2a-yh-XCx"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="134.65116279069767" y="-181.22317596566523"/>
         </view>
     </objects>
     <resources>
+        <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
+        <image name="list.bullet.rectangle" catalog="system" width="128" height="93"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

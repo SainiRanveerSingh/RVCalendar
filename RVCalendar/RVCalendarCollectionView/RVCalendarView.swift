@@ -16,7 +16,14 @@ class RVCalendarView: UIView {
     @IBOutlet weak var labelNextMonth: UILabel?
     @IBOutlet weak var buttonPreviousMonth: UIButton?
     @IBOutlet weak var buttonNextMonth: UIButton?
+    @IBOutlet weak var segmentButtonWeekMonth: UISegmentedControl!
+    @IBOutlet weak var rvCalendarViewHeightConstraint: NSLayoutConstraint?
 
+    enum CalendarViewAs {
+        case WeekType
+        case MonthType
+    }
+    var viewCalendarAs : CalendarViewAs = .MonthType
     
     private var selectedDate = Date()
     private var totalDays = [String]()
@@ -61,21 +68,57 @@ class RVCalendarView: UIView {
         let nextMonth = CalendarHelper.shared.getNextMonth(from: selectedDate)
         let nextMonthText = CalendarHelper().monthName(from: nextMonth)
         
-        labelPreviousMonth?.text = previousMonthText
         labelCurrentMonth?.text = monthLabelText
-        labelNextMonth?.text = nextMonthText
+        if viewCalendarAs == .WeekType {
+            labelPreviousMonth?.text = "Prev"
+            labelNextMonth?.text = "Next"
+        } else {
+            labelPreviousMonth?.text = previousMonthText
+            labelNextMonth?.text = nextMonthText
+        }
     }
     
     @IBAction func buttonPreviousMonth(_ sender: Any) {
-        calendarView?.goToPreviousMonth()
+        if viewCalendarAs == .WeekType {
+            calendarView?.goToPreviousWeek()
+        } else {
+            calendarView?.goToPreviousMonth()
+        }
     }
     
     @IBAction func buttonNextMonth(_ sender: Any) {
-        calendarView?.goToNextMonth()
+        if viewCalendarAs == .WeekType {
+            calendarView?.goToNextWeek()
+        } else {
+            calendarView?.goToNextMonth()
+        }
     }
     
     func setDateSelectorColor(colorName: UIColor) {
         calendarView?.setDateSelectionColor(colorName: colorName)
+    }
+}
+
+extension RVCalendarView {
+    @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
+        //Week View
+        if sender.selectedSegmentIndex == 0 {
+            self.rvCalendarViewHeightConstraint?.constant = 180
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
+                //self.rvCalendarView?.calendarView?.setupCollectionView(viewType: .weekView)
+                self.layoutIfNeeded()
+            }
+            viewCalendarAs = .WeekType
+        } else {
+            //Month View
+            self.rvCalendarViewHeightConstraint?.constant = 432
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
+                //self.rvCalendarView?.calendarView?.setupCollectionView(viewType: .monthView)
+                self.layoutIfNeeded()
+            }
+            viewCalendarAs = .MonthType
+        }
+        setupCalendarHeaders()
     }
 }
 

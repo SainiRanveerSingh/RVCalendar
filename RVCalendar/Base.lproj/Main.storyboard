@@ -51,6 +51,7 @@
                     <connections>
                         <outlet property="rvCalendarView" destination="suK-Ju-r2K" id="dTS-QN-6Dr"/>
                         <outlet property="rvCalendarViewHeightConstraint" destination="WcC-fY-SLj" id="3fU-Lc-R22"/>
+                        <outlet property="segmentButtonWeekMonth" destination="a2G-87-pQN" id="Dld-XY-8Y7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
