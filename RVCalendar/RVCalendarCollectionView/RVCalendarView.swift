@@ -103,17 +103,38 @@ extension RVCalendarView {
     @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
         //Week View
         if sender.selectedSegmentIndex == 0 {
-            self.rvCalendarViewHeightConstraint?.constant = 180
+            self.rvCalendarViewHeightConstraint?.constant = 220
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                //self.rvCalendarView?.calendarView?.setupCollectionView(viewType: .weekView)
+                self.calendarView?.setupCollectionView(viewType: .weekView)
                 self.layoutIfNeeded()
             }
             viewCalendarAs = .WeekType
         } else {
             //Month View
-            self.rvCalendarViewHeightConstraint?.constant = 432
+            self.rvCalendarViewHeightConstraint?.constant = 300
             UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                //self.rvCalendarView?.calendarView?.setupCollectionView(viewType: .monthView)
+                self.calendarView?.setupCollectionView(viewType: .monthView)
+                self.layoutIfNeeded()
+            }
+            viewCalendarAs = .MonthType
+        }
+        setupCalendarHeaders()
+    }
+    
+    func calendarViewTypeChanged(isWeekView: Bool) {
+        //Week View
+        if isWeekView {
+            self.rvCalendarViewHeightConstraint?.constant = 180
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
+                self.calendarView?.setupCollectionView(viewType: .weekView)
+                self.layoutIfNeeded()
+            }
+            viewCalendarAs = .WeekType
+        } else {
+            //Month View
+            self.rvCalendarViewHeightConstraint?.constant = 300
+            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
+                self.calendarView?.setupCollectionView(viewType: .monthView)
                 self.layoutIfNeeded()
             }
             viewCalendarAs = .MonthType

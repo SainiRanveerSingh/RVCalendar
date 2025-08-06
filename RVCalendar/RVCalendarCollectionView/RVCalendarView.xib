@@ -17,7 +17,8 @@
                 <outlet property="labelCurrentMonth" destination="5In-v4-f9K" id="y7p-44-x62"/>
                 <outlet property="labelNextMonth" destination="e76-5e-yFk" id="gZs-fP-Ghp"/>
                 <outlet property="labelPreviousMonth" destination="3rg-Kt-k3S" id="Gch-bS-uR3"/>
-                <outlet property="segmentButtonWeekMonth" destination="fW2-xl-B7L" id="gha-Gm-88V"/>
+                <outlet property="rvCalendarViewHeightConstraint" destination="3St-ga-Dcs" id="qtx-YR-WIf"/>
+                <outlet property="segmentButtonWeekMonth" destination="fW2-xl-B7L" id="0Qx-vt-gD1"/>
                 <outlet property="viewBaseBackground" destination="f3H-88-cAV" id="bxq-MT-nDa"/>
             </connections>
         </placeholder>
@@ -50,7 +51,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WGj-J1-HwN">
-                            <rect key="frame" x="25" y="21" width="66" height="20.333333333333329"/>
+                            <rect key="frame" x="20" y="21" width="76" height="20.333333333333329"/>
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain"/>
@@ -73,7 +74,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gdi-7z-ESL">
-                            <rect key="frame" x="298.33333333333331" y="22.333333333333329" width="37.666666666666686" height="18"/>
+                            <rect key="frame" x="293.33333333333331" y="22.333333333333329" width="47.666666666666686" height="18"/>
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="plain"/>
@@ -141,6 +142,9 @@
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Jo4-yU-ShF" customClass="CollectionViewCalendar" customModule="RVCalendar" customModuleProvider="target">
                             <rect key="frame" x="16" y="86.333333333333343" width="329" height="288.66666666666663"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="288.66666666666663" id="3St-ga-Dcs"/>
+                            </constraints>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="HJL-hb-WPe">
                                 <size key="itemSize" width="128" height="128"/>
                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -155,26 +159,26 @@
                         <constraint firstAttribute="trailing" secondItem="e76-5e-yFk" secondAttribute="trailing" constant="30" id="1yC-iR-de0"/>
                         <constraint firstItem="Gdi-7z-ESL" firstAttribute="height" secondItem="e76-5e-yFk" secondAttribute="height" id="2nB-Fs-kcd"/>
                         <constraint firstItem="3rg-Kt-k3S" firstAttribute="centerY" secondItem="WGj-J1-HwN" secondAttribute="centerY" id="5qP-jg-QKk"/>
-                        <constraint firstItem="Jo4-yU-ShF" firstAttribute="top" secondItem="5In-v4-f9K" secondAttribute="bottom" constant="45" id="Bzm-fo-oTG"/>
+                        <constraint firstItem="Jo4-yU-ShF" firstAttribute="top" secondItem="f3H-88-cAV" secondAttribute="top" constant="86.333333333333343" id="J1g-6u-SOd"/>
                         <constraint firstItem="GKl-fb-lvU" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="16" id="M9r-ZZ-lHW"/>
                         <constraint firstItem="nnT-r2-53H" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="20" id="MWx-AD-jtR"/>
                         <constraint firstAttribute="trailing" secondItem="a9B-d4-ZVl" secondAttribute="trailing" constant="16" id="N4S-iv-EoF"/>
                         <constraint firstItem="5In-v4-f9K" firstAttribute="top" secondItem="f3H-88-cAV" secondAttribute="top" constant="21" id="OPx-MM-6fj"/>
-                        <constraint firstItem="Gdi-7z-ESL" firstAttribute="width" secondItem="e76-5e-yFk" secondAttribute="width" constant="5" id="SGf-1s-8nY"/>
+                        <constraint firstItem="Gdi-7z-ESL" firstAttribute="width" secondItem="e76-5e-yFk" secondAttribute="width" constant="15" id="SGf-1s-8nY"/>
                         <constraint firstItem="a9B-d4-ZVl" firstAttribute="centerY" secondItem="e76-5e-yFk" secondAttribute="centerY" id="SzY-CF-XCD"/>
                         <constraint firstItem="3rg-Kt-k3S" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="30" id="U7G-GJ-DOi"/>
+                        <constraint firstItem="nnT-r2-53H" firstAttribute="top" secondItem="p90-KP-ojc" secondAttribute="bottom" constant="6" id="aac-lg-Kuv"/>
                         <constraint firstItem="Gdi-7z-ESL" firstAttribute="centerY" secondItem="5In-v4-f9K" secondAttribute="centerY" id="dWO-B9-mgm"/>
-                        <constraint firstAttribute="trailing" secondItem="Gdi-7z-ESL" secondAttribute="trailing" constant="25" id="eia-sz-C8k"/>
-                        <constraint firstItem="Jo4-yU-ShF" firstAttribute="top" secondItem="nnT-r2-53H" secondAttribute="bottom" id="iKY-2s-SOX"/>
+                        <constraint firstAttribute="trailing" secondItem="Gdi-7z-ESL" secondAttribute="trailing" constant="20" id="eia-sz-C8k"/>
                         <constraint firstAttribute="trailing" secondItem="nnT-r2-53H" secondAttribute="trailing" constant="20" id="oYD-Ov-bkq"/>
                         <constraint firstAttribute="trailing" secondItem="Jo4-yU-ShF" secondAttribute="trailing" constant="16" id="rj0-Df-LTA"/>
                         <constraint firstItem="WGj-J1-HwN" firstAttribute="height" secondItem="3rg-Kt-k3S" secondAttribute="height" multiplier="1.14286" id="sPD-Xd-a4v"/>
                         <constraint firstItem="e76-5e-yFk" firstAttribute="centerY" secondItem="Gdi-7z-ESL" secondAttribute="centerY" id="sZC-38-665"/>
                         <constraint firstItem="GKl-fb-lvU" firstAttribute="centerY" secondItem="3rg-Kt-k3S" secondAttribute="centerY" id="sZH-WK-92f"/>
                         <constraint firstItem="5In-v4-f9K" firstAttribute="centerX" secondItem="f3H-88-cAV" secondAttribute="centerX" id="tCJ-dc-kyK"/>
-                        <constraint firstItem="WGj-J1-HwN" firstAttribute="width" secondItem="3rg-Kt-k3S" secondAttribute="width" multiplier="1.00508" constant="5" id="v3I-wX-mGh"/>
+                        <constraint firstItem="WGj-J1-HwN" firstAttribute="width" secondItem="3rg-Kt-k3S" secondAttribute="width" multiplier="1.00508" constant="15" id="v3I-wX-mGh"/>
                         <constraint firstItem="Jo4-yU-ShF" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="16" id="vXp-vu-3Cd"/>
-                        <constraint firstItem="WGj-J1-HwN" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="25" id="wQs-uU-t6B"/>
+                        <constraint firstItem="WGj-J1-HwN" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="20" id="wQs-uU-t6B"/>
                         <constraint firstItem="p90-KP-ojc" firstAttribute="leading" secondItem="f3H-88-cAV" secondAttribute="leading" constant="25" id="wmK-Z0-z1Z"/>
                         <constraint firstItem="p90-KP-ojc" firstAttribute="top" secondItem="5In-v4-f9K" secondAttribute="bottom" constant="10" id="xe5-0L-fUe"/>
                         <constraint firstAttribute="bottom" secondItem="Jo4-yU-ShF" secondAttribute="bottom" constant="16" id="yra-RQ-1Sp"/>
@@ -188,7 +192,7 @@
                         <segment title="" image="calendar" catalog="system"/>
                     </segments>
                     <connections>
-                        <action selector="buttonSegmentChanged:" destination="-1" eventType="touchUpInside" id="4Iy-4T-M1N"/>
+                        <action selector="buttonSegmentChanged:" destination="-1" eventType="valueChanged" id="cxV-eE-Tvb"/>
                     </connections>
                 </segmentedControl>
             </subviews>

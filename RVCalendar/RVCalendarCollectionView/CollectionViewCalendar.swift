@@ -19,7 +19,7 @@ class CollectionViewCalendar:  UICollectionView {
         case monthView
         case weekView
     }
-    private var calendarViewType: CalendarViewType = .monthView
+    var calendarViewType: CalendarViewType = .monthView
     
     //------- Calendar Month View -------
     private var selectedDate = Date()
