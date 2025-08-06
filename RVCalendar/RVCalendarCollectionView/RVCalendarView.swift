@@ -96,6 +96,7 @@ class RVCalendarView: UIView {
     
     func setDateSelectorColor(colorName: UIColor) {
         calendarView?.setDateSelectionColor(colorName: colorName)
+        
     }
 }
 

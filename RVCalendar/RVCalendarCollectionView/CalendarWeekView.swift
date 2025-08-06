@@ -18,9 +18,18 @@ class CalendarWeekView: UIView {
     @IBOutlet weak var buttonNextWeek: UIButton?
 
     private var selectedStartDate: Date = CalendarHelper().startOfWeek(from: Date())
-    private var weekDates: [Date] = []
+    //--
+    var allWeeks: [[Date?]] = []
+    var currentWeekIndex = 0
+    var currentWeek: [Date?] {
+        guard currentWeekIndex >= 0 && currentWeekIndex < allWeeks.count else { return [] }
+        return allWeeks[currentWeekIndex]
+    }
+    var selectedMonthDate: Date = Date()
+    //--
+    private var weekDates: [Date?] = []
     private var cellSelectedToHighlight = -1
-    var dateSelectionColor = UIColor.white
+    var dateSelectionColor = UIColor.green
    
     private var selectedDate = Date()
     
@@ -55,10 +64,11 @@ class CalendarWeekView: UIView {
         
         setupWeekView()
         setupCollectionViewLayout()
+        setupCalendarHeaders()
     }
     
     func setupCalendarHeaders() {
-        let monthLabelText = CalendarHelper().monthYearString(date: selectedDate)
+        let monthLabelText = CalendarHelper().monthYearString(date: selectedMonthDate)
         labelCurrentWeekMonth?.text = monthLabelText
     }
     
@@ -67,26 +77,169 @@ class CalendarWeekView: UIView {
     }
     
     func setupWeekView() {
-        weekDates.removeAll()
-        for i in 0..<7 {
-            if let date = Calendar.current.date(byAdding: .day, value: i, to: selectedStartDate) {
-                weekDates.append(date)
+        allWeeks.removeAll()
+        let calendar = Calendar.current
+
+        // Get the first day of the month
+        guard let startOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: selectedStartDate)) else { return }
+
+        // Number of days in the month
+        guard let range = calendar.range(of: .day, in: .month, for: startOfMonth) else { return }
+
+        // Build all dates in the month
+        var allDates: [Date?] = []
+
+        for day in range {
+            if let date = calendar.date(byAdding: .day, value: day - 1, to: startOfMonth) {
+                allDates.append(date)
             }
         }
-        
+
+        // Pad beginning of first week with nils if first date is not start of the week
+        if let firstDate = allDates.first {
+            guard let dateFirst = firstDate else { return }
+            let weekday = calendar.component(.weekday, from: dateFirst)
+            let paddingCount = (weekday - calendar.firstWeekday + 7) % 7
+            for _ in 0..<paddingCount {
+                allDates.insert(nil, at: 0)
+            }
+        }
+
+        // Chunk into weeks
+        var week: [Date?] = []
+        for date in allDates {
+            week.append(date)
+            if week.count == 7 {
+                allWeeks.append(week)
+                week = []
+            }
+        }
+        if !week.isEmpty {
+            // Fill up the last week with trailing nils if needed
+            while week.count < 7 {
+                week.append(nil)
+            }
+            allWeeks.append(week)
+        }
+
+        // Reset to first week
+        currentWeekIndex = 0
         calendarWeekView?.reloadData()
     }
     
     func goToNextWeek() {
-        guard let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: selectedStartDate) else { return }
-        selectedStartDate = nextWeek
-        self.setupWeekView()
+        // If at last week currently
+        if currentWeekIndex == allWeeks.count - 1 {
+            // Load next month’s weeks and append
+            if let nextMonthDate = Calendar.current.date(byAdding: .month, value: 1, to: selectedMonthDate) {
+                selectedMonthDate = nextMonthDate
+                let newWeeks = generateWeeks(for: selectedMonthDate)
+                allWeeks.append(contentsOf: newWeeks)
+            }
+        }
+        
+        // Move to next week
+        if currentWeekIndex < allWeeks.count - 1 {
+            currentWeekIndex += 1
+            reloadWeekView()
+        }
     }
 
     func goToPreviousWeek() {
-        guard let previousWeek = Calendar.current.date(byAdding: .day, value: -7, to: selectedStartDate) else { return }
-        selectedStartDate = previousWeek
-        self.setupWeekView()
+        if currentWeekIndex == 0 {
+            // Load previous month’s weeks and prepend
+            if let previousMonthDate = Calendar.current.date(byAdding: .month, value: -1, to: selectedMonthDate) {
+                selectedMonthDate = previousMonthDate
+                let newWeeks = generateWeeks(for: selectedMonthDate)
+                allWeeks.insert(contentsOf: newWeeks, at: 0)
+                
+                // Shift currentWeekIndex forward by newWeeks.count
+                currentWeekIndex += newWeeks.count
+            }
+        }
+        
+        // Move to previous week
+        if currentWeekIndex > 0 {
+            currentWeekIndex -= 1
+            reloadWeekView()
+        }
+    }
+    
+    func generateWeeks(for monthDate: Date) -> [[Date?]] {
+        var weeks: [[Date?]] = []
+        let calendar = Calendar.current
+        
+        guard let range = calendar.range(of: .day, in: .month, for: monthDate),
+              let monthStart = calendar.date(from: calendar.dateComponents([.year, .month], from: monthDate)) else {
+            return []
+        }
+        
+        var dates: [Date?] = []
+        
+        // 1️⃣ Find weekday of 1st of month
+        let weekdayOfFirst = calendar.component(.weekday, from: monthStart)
+        let leadingEmptyDays = weekdayOfFirst - calendar.firstWeekday
+        let emptyCount = leadingEmptyDays >= 0 ? leadingEmptyDays : (7 + leadingEmptyDays)
+        
+        // 2️⃣ Fill leading nils
+        for _ in 0..<emptyCount {
+            dates.append(nil)
+        }
+        
+        // 3️⃣ Fill actual month days
+        for day in range {
+            if let date = calendar.date(byAdding: .day, value: day - 1, to: monthStart) {
+                dates.append(date)
+            }
+        }
+        
+        // 4️⃣ Pad trailing nils to complete last week
+        while dates.count % 7 != 0 {
+            dates.append(nil)
+        }
+        
+        // 5️⃣ Split into weeks
+        var i = 0
+        while i < dates.count {
+            let week = Array(dates[i..<i+7])
+            weeks.append(week)
+            i += 7
+        }
+        
+        return weeks
+    }
+    
+    func reloadWeekView() {
+        let week = allWeeks[currentWeekIndex]
+        weekDates = week
+        
+        //Find the first non-nil date in the week to determine the month
+        if let visibleDate = week.compactMap({ $0 }).first {
+            updateMonthLabel(using: visibleDate)
+        }
+
+        
+        //self.setupCalendarHeaders()
+        cellSelectedToHighlight = -1
+        calendarWeekView?.reloadData()
+    }
+    
+    func updateMonthLabel(using date: Date) {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "LLLL yyyy" // e.g. August 2025
+        let monthYear = formatter.string(from: date)
+        labelCurrentWeekMonth?.text = monthYear
+    }
+    
+    func isFirstWeekOfMonth(_ date: Date) -> Bool {
+        let day = Calendar.current.component(.day, from: date)
+        return day <= 7
+    }
+
+    func isLastWeekOfMonth(_ date: Date) -> Bool {
+        guard let range = Calendar.current.range(of: .day, in: .month, for: date) else { return false }
+        let day = Calendar.current.component(.day, from: date)
+        return day >= (range.count - 6)
     }
     
     func setupCollectionViewLayout() {
@@ -115,17 +268,29 @@ class CalendarWeekView: UIView {
 // MARK: - UICollectionViewDataSource
 extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return weekDates.count
+        return 7//weekDates.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = calendarWeekView?.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
         
-        let date = weekDates[indexPath.item]
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d"
-        cell.labelDate.text = formatter.string(from: date)
-        
+        if let date = currentWeek[indexPath.item] {
+            //let date = weekDates[indexPath.item]
+            let formatter = DateFormatter()
+            formatter.dateFormat = "d"
+            cell.labelDate.text = formatter.string(from: date)
+            cell.isUserInteractionEnabled = true
+            cell.labelDate.textColor = .black
+        } else {
+            cell.labelDate.text = ""
+            cell.isUserInteractionEnabled = false
+            cell.labelDate.textColor = .clear // or inactive color
+        }
+        if cellSelectedToHighlight != -1 {
+            cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+        } else {
+            cell.viewDateLabelSelection.backgroundColor = .white
+        }
         return cell
     }
     
@@ -139,8 +304,14 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
                 cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
                 cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
                 let selectedDateValue = getDateForSelectedCell(atIndex: indexPath.item)
-                //print("Selected Date: \(selectedDateValue)")
+                print("Selected Date: \(selectedDateValue)")
                 
+                
+                //--Showing Selected Date--
+                guard let selectedDate = currentWeek[indexPath.item] else { return }
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd/MM/yyyy"
+                    print("Selected Date: \(formatter.string(from: selectedDate))")
                 //MARK: - Create Delegate Method For Date Selection Here -
                 //calendarDelegate?.dateSelected(dateString: selectedDateValue)
             }
@@ -158,10 +329,11 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
     
     func getDateForSelectedCell(atIndex: Int) -> String {
         //--
-        let date = weekDates[atIndex]
+        let date = currentWeek[atIndex]
         let formatter = DateFormatter()
         formatter.dateFormat = "d"
-        let strDay = formatter.string(from: date)
+        guard let dateValue = date else { return "" }
+        let strDay = formatter.string(from: dateValue)
         //--
         let day = Int(strDay)
         let calendar = Calendar.current
@@ -189,7 +361,7 @@ extension CalendarWeekView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         //----- Common Cell Size Setup For Both View Type -----
             let width = (collectionView.frame.width - 2) / 7
-            let height = (collectionView.frame.height - 2) / 6
+            let height = (collectionView.frame.height - 2) // 6
             return CGSize(width: width, height: height)
     }
 }
