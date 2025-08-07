@@ -1,0 +1,107 @@
+//
+//  RVCalendar.swift
+//  RVCalendar
+//
+//  Created by RV on 07/08/25.
+//
+
+import Foundation
+import UIKit
+
+class RVCalendar: UIView {
+    @IBOutlet weak var contentView: UIView!
+    
+    @IBOutlet weak var segmentButtonWeekMonth: UISegmentedControl!
+    @IBOutlet weak var labelCalendarViewType: UILabel!
+    
+    @IBOutlet weak var calendarMonthViewHeightConstraint: NSLayoutConstraint?
+    @IBOutlet weak var calendarMonthView: RVCalendarView!
+    @IBOutlet weak var calendarWeekViewHeightConstraint: NSLayoutConstraint?
+    @IBOutlet weak var calendarWeekView: CalendarWeekView!
+    
+    var rvCalendarDelegate: RVCalendarDelegate?
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        loadFromNib()
+    }
+    
+    private func loadFromNib() {
+        Bundle.main.loadNibNamed("RVCalendar", owner: self, options: nil)
+        guard let contentView = contentView else {
+            fatalError("contentView not connected")
+        }
+        
+        contentView.frame = bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(contentView)
+        initialSetup()
+    }
+    
+    private func initialSetup() {
+        segmentButtonWeekMonth.selectedSegmentIndex = 1
+        labelCalendarViewType.text = "Calendar View"
+        calendarWeekView.isHidden = true
+        calendarWeekView.weekViewCalendarDelegate = self
+    }
+    
+    @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
+        if sender.selectedSegmentIndex == 0 {
+            //To switch from Week View to Month View:
+            labelCalendarViewType.text = "List View"
+            toggleViews(showWeekView: true)
+        } else {
+            //To switch from Month View to Week View:
+            labelCalendarViewType.text = "Calendar View"
+            toggleViews(showWeekView: false)
+        }
+    }
+    
+    
+    private func toggleViews(showWeekView: Bool) {
+        // Bounce animation constants
+        let animationDuration = 0.6
+        let bounceDamping: CGFloat = 0.5
+        let initialVelocity: CGFloat = 0.3
+
+        // Update Wek View constraint value
+        calendarWeekViewHeightConstraint?.constant = showWeekView ? 180 : 0 // or your desired height
+        calendarMonthViewHeightConstraint?.constant = showWeekView ? 0 : 433 // or your desired height
+        
+        let newHeight = showWeekView ? 220.0 : 473.0
+        rvCalendarDelegate?.updateHeightTo(newHeight: newHeight)
+        
+        // Unhide both views during animation
+        calendarMonthView.isHidden = false
+        calendarWeekView.isHidden = false
+
+        UIView.animate(withDuration: animationDuration,
+                       delay: 0,
+                       usingSpringWithDamping: bounceDamping,
+                       initialSpringVelocity: initialVelocity,
+                       options: [.curveEaseIn],
+                       animations: {
+            self.calendarMonthView.alpha = showWeekView ? 0 : 1
+            self.calendarWeekView.alpha = showWeekView ? 1 : 0
+            self.layoutIfNeeded()
+        }, completion: { _ in
+            // Toggle visibility after animation
+            self.calendarMonthView.isHidden = showWeekView
+            self.calendarWeekView.isHidden = !showWeekView
+        })
+    }
+    
+    func setDateSelectionBy(color: UIColor) {
+        calendarMonthView.setDateSelectorColor(colorName: color)
+        calendarWeekView.setDateSelectionColor(colorName: color)
+    }
+    
+}
+
+//MARK: - Week View Delegate Method -
+extension RVCalendar: CalendarWeekViewDelegate {
+    func dateSelected(dateString: String) {
+        print(dateString)
+        rvCalendarDelegate?.selectedDate(stringValue: dateString)
+    }
+}

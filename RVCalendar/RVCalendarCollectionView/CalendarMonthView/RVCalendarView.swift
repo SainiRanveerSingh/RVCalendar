@@ -19,19 +19,9 @@ class RVCalendarView: UIView {
     @IBOutlet weak var segmentButtonWeekMonth: UISegmentedControl!
     @IBOutlet weak var rvCalendarViewHeightConstraint: NSLayoutConstraint?
 
-    enum CalendarViewAs {
-        case WeekType
-        case MonthType
-    }
-    var viewCalendarAs : CalendarViewAs = .MonthType
     
     private var selectedDate = Date()
     private var totalDays = [String]()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        loadFromNib()
-    }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -52,7 +42,7 @@ class RVCalendarView: UIView {
     
     func commonSetup() {
         //calendarView?.calendarViewType = .monthView
-        calendarView?.setupCollectionView(viewType: .monthView)
+        calendarView?.setupCollectionView()
         calendarView?.calendarDelegate = self
         viewBaseBackground?.clipsToBounds = true
         viewBaseBackground?.layer.borderWidth = 1.0
@@ -69,79 +59,25 @@ class RVCalendarView: UIView {
         let nextMonthText = CalendarHelper().monthName(from: nextMonth)
         
         labelCurrentMonth?.text = monthLabelText
-        if viewCalendarAs == .WeekType {
-            labelPreviousMonth?.text = "Prev"
-            labelNextMonth?.text = "Next"
-        } else {
             labelPreviousMonth?.text = previousMonthText
             labelNextMonth?.text = nextMonthText
-        }
     }
     
     @IBAction func buttonPreviousMonth(_ sender: Any) {
-        if viewCalendarAs == .WeekType {
-            calendarView?.goToPreviousWeek()
-        } else {
             calendarView?.goToPreviousMonth()
-        }
     }
     
     @IBAction func buttonNextMonth(_ sender: Any) {
-        if viewCalendarAs == .WeekType {
-            calendarView?.goToNextWeek()
-        } else {
             calendarView?.goToNextMonth()
-        }
     }
     
     func setDateSelectorColor(colorName: UIColor) {
         calendarView?.setDateSelectionColor(colorName: colorName)
-        
     }
 }
 
 extension RVCalendarView {
-    @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
-        //Week View
-        if sender.selectedSegmentIndex == 0 {
-            self.rvCalendarViewHeightConstraint?.constant = 220
-            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                self.calendarView?.setupCollectionView(viewType: .weekView)
-                self.layoutIfNeeded()
-            }
-            viewCalendarAs = .WeekType
-        } else {
-            //Month View
-            self.rvCalendarViewHeightConstraint?.constant = 300
-            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                self.calendarView?.setupCollectionView(viewType: .monthView)
-                self.layoutIfNeeded()
-            }
-            viewCalendarAs = .MonthType
-        }
-        setupCalendarHeaders()
-    }
     
-    func calendarViewTypeChanged(isWeekView: Bool) {
-        //Week View
-        if isWeekView {
-            self.rvCalendarViewHeightConstraint?.constant = 180
-            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                self.calendarView?.setupCollectionView(viewType: .weekView)
-                self.layoutIfNeeded()
-            }
-            viewCalendarAs = .WeekType
-        } else {
-            //Month View
-            self.rvCalendarViewHeightConstraint?.constant = 300
-            UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut]) {
-                self.calendarView?.setupCollectionView(viewType: .monthView)
-                self.layoutIfNeeded()
-            }
-            viewCalendarAs = .MonthType
-        }
-        setupCalendarHeaders()
-    }
 }
 
 extension RVCalendarView: CalendarCollectionDelegate {

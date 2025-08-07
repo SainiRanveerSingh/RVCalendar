@@ -33,6 +33,8 @@ class CalendarWeekView: UIView {
    
     private var selectedDate = Date()
     
+    var weekViewCalendarDelegate: CalendarWeekViewDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadFromNib()
@@ -305,15 +307,9 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
                 cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
                 let selectedDateValue = getDateForSelectedCell(atIndex: indexPath.item)
                 print("Selected Date: \(selectedDateValue)")
-                
-                
-                //--Showing Selected Date--
-                guard let selectedDate = currentWeek[indexPath.item] else { return }
-                    let formatter = DateFormatter()
-                    formatter.dateFormat = "dd/MM/yyyy"
-                    print("Selected Date: \(formatter.string(from: selectedDate))")
-                //MARK: - Create Delegate Method For Date Selection Here -
-                //calendarDelegate?.dateSelected(dateString: selectedDateValue)
+
+                //MARK: - Delegate Method For Date Selection -
+                weekViewCalendarDelegate?.dateSelected(dateString: selectedDateValue)
             }
         }
     }

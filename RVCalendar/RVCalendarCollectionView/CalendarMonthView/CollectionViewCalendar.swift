@@ -7,36 +7,19 @@
 
 import UIKit
 
-protocol CalendarCollectionDelegate {
-    func currentMonth(nameText: String)
-    func nextMonth(nameText: String)
-    func previousMonth(nameText: String)
-    func dateSelected(dateString: String)
-}
 
 class CollectionViewCalendar:  UICollectionView {
-    enum CalendarViewType {
-        case monthView
-        case weekView
-    }
-    var calendarViewType: CalendarViewType = .monthView
-    
     //------- Calendar Month View -------
     private var selectedDate = Date()
     private var totalDays = [String]()
     private var datesInMonth: [Date?] = []
     //------- Calendar Month View -------
     
-    //------- Calendar Week View -------
-    private var selectedStartDate: Date = CalendarHelper().startOfWeek(from: Date())
-    private var weekDates: [Date] = []
-    //------- Calendar Week View -------
-    
     private var cellSelectedToHighlight = -1
     
     var calendarDelegate: CalendarCollectionDelegate?
     var dateSelectionColor = UIColor.white
-
+    
     var nextMonthName: String {
         let nextDate = CalendarHelper.shared.getNextMonth(from: selectedDate)
         return CalendarHelper.shared.monthName(from: nextDate)
@@ -51,47 +34,19 @@ class CollectionViewCalendar:  UICollectionView {
         super.awakeFromNib()
     }
     
-    func setupCollectionView(viewType: CalendarViewType) {
+    func setupCollectionView() {
         self.delegate = self
         self.dataSource = self
         //Cell registration
         let nib = UINib.init(nibName: "RVCalendarCollectionViewCell", bundle: nil)
         self.register(nib, forCellWithReuseIdentifier: "RVCalendarCollectionViewCell")
-        calendarViewType = viewType
-        if calendarViewType == .weekView {
-            setupWeekView()
-        } else {
-            setupMonthView()
-        }
+        
+        setupMonthView()
         setupCollectionViewLayout()
     }
     
     func setDateSelectionColor(colorName: UIColor) {
         dateSelectionColor = colorName
-    }
-    
-    //------ Calendar As Week View ------
-    func setupWeekView() {
-        weekDates.removeAll()
-        for i in 0..<7 {
-            if let date = Calendar.current.date(byAdding: .day, value: i, to: selectedStartDate) {
-                weekDates.append(date)
-            }
-        }
-        
-        self.reloadData()
-    }
-    
-    func goToNextWeek() {
-        guard let nextWeek = Calendar.current.date(byAdding: .day, value: 7, to: selectedStartDate) else { return }
-        selectedStartDate = nextWeek
-        self.setupWeekView()
-    }
-
-    func goToPreviousWeek() {
-        guard let previousWeek = Calendar.current.date(byAdding: .day, value: -7, to: selectedStartDate) else { return }
-        selectedStartDate = previousWeek
-        self.setupWeekView()
     }
     
     //------ Calendar As Month View ------
@@ -100,11 +55,11 @@ class CollectionViewCalendar:  UICollectionView {
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 0 // space between columns (horizontal spacing)
         layout.minimumLineSpacing = 2       // 🔽 space between rows (vertical spacing)
-
+        
         let totalWidth = self.bounds.width
         let cellWidth = totalWidth / 7
         layout.itemSize = CGSize(width: cellWidth, height: cellWidth)
-
+        
         self.collectionViewLayout = layout
     }
     
@@ -165,34 +120,24 @@ class CollectionViewCalendar:  UICollectionView {
         selectedDate = CalendarHelper().plusMonth(date: selectedDate)
         setupMonthView()
     }
-
+    
     
 }
 
 // MARK: - UICollectionViewDataSource
 extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if calendarViewType == .weekView {
-            return weekDates.count
-        } else {
-            return totalDays.count
-        }
+        return totalDays.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
-        if calendarViewType == .weekView {
-            let date = weekDates[indexPath.item]
-            let formatter = DateFormatter()
-            formatter.dateFormat = "d"
-            cell.labelDate.text = formatter.string(from: date)
+        
+        cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
+        if cellSelectedToHighlight != -1 {
+            cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
         } else {
-            cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
-            if cellSelectedToHighlight != -1 {
-                cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
-            } else {
-                cell.viewDateLabelSelection.backgroundColor = .white
-            }
+            cell.viewDateLabelSelection.backgroundColor = .white
         }
         return cell
     }
@@ -247,9 +192,8 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
 // MARK: - UICollectionViewDelegateFlowLayout
 extension CollectionViewCalendar: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        //----- Common Cell Size Setup For Both View Type -----
-            let width = (collectionView.frame.width - 2) / 7
-            let height = (collectionView.frame.height - 2) / 6
-            return CGSize(width: width, height: height)
+        let width = (collectionView.frame.width - 2) / 7
+        let height = (collectionView.frame.height - 2) / 6
+        return CGSize(width: width, height: height)
     }
 }
