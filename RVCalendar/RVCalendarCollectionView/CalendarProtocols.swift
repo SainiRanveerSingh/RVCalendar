@@ -20,6 +20,10 @@ protocol CalendarWeekViewDelegate {
     func dateSelected(dateString: String)
 }
 
+//MARK: - Protocol Methods For Calendar As Month View
+protocol CalendarMonthViewDelegate {
+    func monthViewSelected(dateString: String)
+}
 
 protocol RVCalendarDelegate {
     func updateHeightTo(newHeight: CGFloat)

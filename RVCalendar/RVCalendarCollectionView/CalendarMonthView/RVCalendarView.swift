@@ -19,7 +19,7 @@ class RVCalendarView: UIView {
     @IBOutlet weak var segmentButtonWeekMonth: UISegmentedControl!
     @IBOutlet weak var rvCalendarViewHeightConstraint: NSLayoutConstraint?
 
-    
+    var monthViewCalendarDelegate: CalendarMonthViewDelegate?
     private var selectedDate = Date()
     private var totalDays = [String]()
     
@@ -96,6 +96,7 @@ extension RVCalendarView: CalendarCollectionDelegate {
     
     func dateSelected(dateString: String) {
         print(dateString)
+        monthViewCalendarDelegate?.monthViewSelected(dateString: dateString)
     }
     
 }

@@ -43,6 +43,7 @@ class RVCalendar: UIView {
         labelCalendarViewType.text = "Calendar View"
         calendarWeekView.isHidden = true
         calendarWeekView.weekViewCalendarDelegate = self
+        calendarMonthView.monthViewCalendarDelegate = self
     }
     
     @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
@@ -96,11 +97,21 @@ class RVCalendar: UIView {
         calendarWeekView.setDateSelectionColor(colorName: color)
     }
     
+    func addEventsOn(dates: [Date]) {
+        
+    }
 }
 
 //MARK: - Week View Delegate Method -
 extension RVCalendar: CalendarWeekViewDelegate {
     func dateSelected(dateString: String) {
+        print(dateString)
+        rvCalendarDelegate?.selectedDate(stringValue: dateString)
+    }
+}
+
+extension RVCalendar: CalendarMonthViewDelegate {
+    func monthViewSelected(dateString: String) {
         print(dateString)
         rvCalendarDelegate?.selectedDate(stringValue: dateString)
     }
