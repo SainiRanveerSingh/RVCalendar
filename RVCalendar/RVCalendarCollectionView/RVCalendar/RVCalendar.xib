@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -26,20 +25,20 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9fg-Xz-lDG" customClass="RVCalendarView" customModule="RVCalendar" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="40" width="393" height="433"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="433" id="peP-pu-aQZ"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1e1-3y-T6S" customClass="CalendarWeekView" customModule="RVCalendar" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="40" width="393" height="200"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="200" id="Pac-xV-5Lj"/>
                     </constraints>
                 </view>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Vsw-Wa-MfU">
-                    <rect key="frame" x="288" y="5" width="85" height="32"/>
+                    <rect key="frame" x="288" y="0.0" width="85" height="32"/>
                     <segments>
                         <segment title="" image="list.bullet.rectangle" catalog="system"/>
                         <segment title="" image="calendar" catalog="system"/>
@@ -49,16 +48,16 @@
                     </connections>
                 </segmentedControl>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Month" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jq8-Db-VXL">
-                    <rect key="frame" x="20" y="10" width="49" height="21"/>
+                    <rect key="frame" x="20" y="5" width="49" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstItem="9fg-Xz-lDG" firstAttribute="top" secondItem="Vsw-Wa-MfU" secondAttribute="bottom" constant="4" id="1gS-wb-Etb"/>
+                <constraint firstItem="9fg-Xz-lDG" firstAttribute="top" secondItem="Vsw-Wa-MfU" secondAttribute="bottom" constant="9" id="1gS-wb-Etb"/>
                 <constraint firstItem="1e1-3y-T6S" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="2LY-Jk-fdM"/>
                 <constraint firstItem="jq8-Db-VXL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Fh9-4z-23c"/>
                 <constraint firstItem="9fg-Xz-lDG" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="LtW-x9-akw"/>
@@ -77,8 +76,5 @@
     <resources>
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="list.bullet.rectangle" catalog="system" width="128" height="93"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>

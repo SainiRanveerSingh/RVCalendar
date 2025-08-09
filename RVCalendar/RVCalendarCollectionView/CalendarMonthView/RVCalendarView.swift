@@ -23,6 +23,10 @@ class RVCalendarView: UIView {
     private var selectedDate = Date()
     private var totalDays = [String]()
     
+    //To Setup Event Dots With Specific Colors
+    var dictDateEventColors = [String: [UIColor]]()
+    var colorForDateSelection = UIColor.green
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         loadFromNib()
@@ -44,11 +48,21 @@ class RVCalendarView: UIView {
         //calendarView?.calendarViewType = .monthView
         calendarView?.setupCollectionView()
         calendarView?.calendarDelegate = self
+        
+        calendarView?.dateSelectionColor = colorForDateSelection
+        calendarView?.dictArrayDateEventColors = dictDateEventColors
+        
         viewBaseBackground?.clipsToBounds = true
         viewBaseBackground?.layer.borderWidth = 1.0
         viewBaseBackground?.layer.borderColor = UIColor.gray.cgColor
         viewBaseBackground?.layer.cornerRadius = 20.0
         setupCalendarHeaders() 
+    }
+    
+    func reloadMonthViewCalendar() {
+        calendarView?.dateSelectionColor = colorForDateSelection
+        calendarView?.dictArrayDateEventColors = dictDateEventColors
+        calendarView?.reloadData()
     }
     
     func setupCalendarHeaders() {
@@ -73,6 +87,7 @@ class RVCalendarView: UIView {
     
     func setDateSelectorColor(colorName: UIColor) {
         calendarView?.setDateSelectionColor(colorName: colorName)
+        colorForDateSelection = colorName
     }
 }
 

@@ -18,6 +18,7 @@ class RVCalendar: UIView {
     @IBOutlet weak var calendarMonthView: RVCalendarView!
     @IBOutlet weak var calendarWeekViewHeightConstraint: NSLayoutConstraint?
     @IBOutlet weak var calendarWeekView: CalendarWeekView!
+
     
     var rvCalendarDelegate: RVCalendarDelegate?
     
@@ -44,6 +45,8 @@ class RVCalendar: UIView {
         calendarWeekView.isHidden = true
         calendarWeekView.weekViewCalendarDelegate = self
         calendarMonthView.monthViewCalendarDelegate = self
+        calendarMonthView.clipsToBounds = true
+        calendarMonthView.layer.cornerRadius = 15.0
     }
     
     @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
@@ -97,8 +100,12 @@ class RVCalendar: UIView {
         calendarWeekView.setDateSelectionColor(colorName: color)
     }
     
-    func addEventsOn(dates: [Date]) {
-        
+    //To Setup Event Dots With Specific Colors
+    func addEventsOn(datesWithColors: [String: [UIColor]]) {
+        calendarWeekView.dictDateEventArrayColors = datesWithColors
+        calendarMonthView.dictDateEventColors = datesWithColors
+        calendarWeekView.reloadWeekView()
+        calendarMonthView.reloadMonthViewCalendar()
     }
 }
 

@@ -35,6 +35,9 @@ class CalendarWeekView: UIView {
     
     var weekViewCalendarDelegate: CalendarWeekViewDelegate?
     
+    //To Setup Event Dots With Specific Colors
+    var dictDateEventArrayColors = [String: [UIColor]]()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         loadFromNib()
@@ -288,10 +291,20 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
             cell.isUserInteractionEnabled = false
             cell.labelDate.textColor = .clear // or inactive color
         }
+        
+        if cell.labelDate.text != "" {
+            if dictDateEventArrayColors.count > 0 {
+                let currentCellDate = getDateForSelectedCell(atIndex: indexPath.item)
+                if let arrayColors = dictDateEventArrayColors[currentCellDate] {
+                    cell.setEventDateDotsWith(colors: arrayColors)
+                }
+            }
+        }
+        
         if cellSelectedToHighlight != -1 {
             cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
         } else {
-            cell.viewDateLabelSelection.backgroundColor = .white
+            cell.viewDateLabelSelection.backgroundColor = .clear
         }
         return cell
     }

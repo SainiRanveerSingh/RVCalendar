@@ -19,6 +19,8 @@ class CollectionViewCalendar:  UICollectionView {
     
     var calendarDelegate: CalendarCollectionDelegate?
     var dateSelectionColor = UIColor.white
+    var dictArrayDateEventColors = [String: [UIColor]]()
+//    var arrayDateEventColors = [UIColor]()
     
     var nextMonthName: String {
         let nextDate = CalendarHelper.shared.getNextMonth(from: selectedDate)
@@ -134,6 +136,16 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
         let cell = self.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
         
         cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
+        
+        if cell.labelDate.text != "" {
+            if dictArrayDateEventColors.count > 0 {
+                let currentCellDate = getDateForSelectedCell(atIndex: indexPath.item)
+                if let arrayColors = dictArrayDateEventColors[currentCellDate] {
+                    cell.setEventDateDotsWith(colors: arrayColors)
+                }
+            }
+        }
+        
         if cellSelectedToHighlight != -1 {
             cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
         } else {

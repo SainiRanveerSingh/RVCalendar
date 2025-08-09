@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -142,7 +141,7 @@
                                 </stackView>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Rsa-gu-TmF" customClass="CollectionViewCalendar" customModule="RVCalendar" customModuleProvider="target">
                                     <rect key="frame" x="16" y="91.333333333333329" width="341" height="55.666666666666671"/>
-                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="TQw-YI-dX5">
                                         <size key="itemSize" width="128" height="128"/>
                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -151,7 +150,7 @@
                                     </collectionViewFlowLayout>
                                 </collectionView>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstItem="j5y-eC-NeE" firstAttribute="centerY" secondItem="xiq-aX-kwz" secondAttribute="centerY" id="0hg-Dk-Fi2"/>
                                 <constraint firstItem="D5c-UM-8pu" firstAttribute="leading" secondItem="PWU-rh-r5T" secondAttribute="leading" constant="20" id="3Mh-qX-iJ6"/>
@@ -184,7 +183,7 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="PWU-rh-r5T" secondAttribute="bottom" constant="10" id="6sc-6L-7sh"/>
                         <constraint firstItem="PWU-rh-r5T" firstAttribute="leading" secondItem="ZeB-rg-Wnf" secondAttribute="leading" constant="10" id="QvH-eu-Hez"/>
@@ -194,7 +193,7 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="ZeB-rg-Wnf" secondAttribute="bottom" id="JZZ-Eo-YKK"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="ZeB-rg-Wnf" secondAttribute="trailing" id="cB8-Pf-MaP"/>
@@ -208,8 +207,5 @@
     <resources>
         <image name="chevron.left" catalog="system" width="97" height="128"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
