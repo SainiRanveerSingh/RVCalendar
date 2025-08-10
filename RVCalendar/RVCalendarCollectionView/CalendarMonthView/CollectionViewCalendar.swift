@@ -68,12 +68,15 @@ class CollectionViewCalendar:  UICollectionView {
     }
     
     func setupMonthView() {
+        setupMonthViewFor(date: selectedDate)
+    }
+    
+    func setupMonthViewFor(date: Date) {
         totalDays.removeAll()
         datesInMonth.removeAll()
         cellSelectedToHighlight = -1
-        
-        let daysInMonth = CalendarHelper().daysInMonth(date: selectedDate)
-        let firstDay = CalendarHelper().firstOfMonth(date: selectedDate)
+        let daysInMonth = CalendarHelper().daysInMonth(date: date)
+        let firstDay = CalendarHelper().firstOfMonth(date: date)
         let startingSpaces = CalendarHelper().weekDay(date: firstDay)
         
         var count = 1
@@ -95,10 +98,10 @@ class CollectionViewCalendar:  UICollectionView {
             count += 1
         }
         
-        let monthLabelText = CalendarHelper().monthYearString(date: selectedDate)
-        let previousMonth = CalendarHelper.shared.getPreviousMonth(from: selectedDate)
+        let monthLabelText = CalendarHelper().monthYearString(date: date)
+        let previousMonth = CalendarHelper.shared.getPreviousMonth(from: date)
         let previousMonthText = CalendarHelper().monthName(from: previousMonth)
-        let nextMonth = CalendarHelper.shared.getNextMonth(from: selectedDate)
+        let nextMonth = CalendarHelper.shared.getNextMonth(from: date)
         let nextMonthText = CalendarHelper().monthName(from: nextMonth)
         
         calendarDelegate?.previousMonth(nameText: previousMonthText)
@@ -108,21 +111,36 @@ class CollectionViewCalendar:  UICollectionView {
         self.reloadData()
     }
     
+    func reloadCalendarFor(dateValue: Date) {
+        selectedDate = dateValue
+        setupMonthViewFor(date: selectedDate)
+    }
+    
     func calculateCalendarHeight(for date: Date) -> CGFloat {
         let weeks = CalendarHelper.shared.numberOfWeeksInMonth(for: date)
-        let rowHeight: CGFloat = 40 // Or whatever your cell height is
-        let totalHeight = CGFloat(weeks) * rowHeight
+        let rowHeight: CGFloat = 48 // Or whatever your cell height is
+        let totalHeight = CGFloat(weeks) * rowHeight + CGFloat(weeks) * 2
         return totalHeight
     }
     
     func goToPreviousMonth() {
         selectedDate = CalendarHelper().minusMonth(date: selectedDate)
         setupMonthView()
+        calendarDelegate?.newCalendarMonth(date: selectedDate)
+        /*
+        let newHeight = calculateCalendarHeight(for: selectedDate)
+        calendarDelegate?.newMonthCalendar(height: newHeight)
+        */
     }
     
     func goToNextMonth() {
         selectedDate = CalendarHelper().plusMonth(date: selectedDate)
         setupMonthView()
+        calendarDelegate?.newCalendarMonth(date: selectedDate)
+        /*
+        let newHeight = calculateCalendarHeight(for: selectedDate)
+        calendarDelegate?.newMonthCalendar(height: newHeight)
+        */
     }
     
     func reloadMonthViewFor(selectedNewDate: String) {

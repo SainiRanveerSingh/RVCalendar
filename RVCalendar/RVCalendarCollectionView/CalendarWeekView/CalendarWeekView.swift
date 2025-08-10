@@ -153,6 +153,7 @@ class CalendarWeekView: UIView {
                 allWeeks.append(contentsOf: newWeeks)
                 
                 //Delegate Call For Next Month
+                weekViewCalendarDelegate?.weekViewMonthChangedTo(newDate: nextMonthDate)
             }
         }
         
@@ -175,12 +176,33 @@ class CalendarWeekView: UIView {
                 currentWeekIndex += newWeeks.count
                 
                 //Delegate Call For Previous Month
+                weekViewCalendarDelegate?.weekViewMonthChangedTo(newDate: previousMonthDate)
             }
         }
         
         // Move to previous week
         if currentWeekIndex > 0 {
             currentWeekIndex -= 1
+            reloadWeekView()
+        }
+    }
+    
+    func goToWeekForSelected(date: Date) {
+        var weekCount = 0
+        var foundWeekForTheDate = false
+        for weekValue in allWeeks {
+            if weekValue.firstIndex(of: date) != nil {
+                foundWeekForTheDate = true
+            }
+            if !foundWeekForTheDate {
+                weekCount += 1
+            } else {
+                break
+            }
+        }
+        // Move to next week
+        if weekCount <= allWeeks.count - 1 {
+            currentWeekIndex = weekCount
             reloadWeekView()
         }
     }
@@ -245,7 +267,11 @@ class CalendarWeekView: UIView {
     
     func reloadWeekViewFor(selectedNewDate: String) {
         dateSelectedByUserOnCalendar = selectedNewDate
-        calendarWeekView?.reloadData()        
+        calendarWeekView?.reloadData()
+    }
+    
+    func showWeekFor(selectedDate: Date) {        
+        goToWeekForSelected(date: selectedDate)
     }
     
     func updateMonthLabel(using date: Date) {
@@ -381,7 +407,7 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
         //--
         let day = Int(strDay)
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month], from: selectedStartDate)
+        let components = calendar.dateComponents([.year, .month], from: dateValue)
         
         var dateComponents = DateComponents()
         dateComponents.year = components.year

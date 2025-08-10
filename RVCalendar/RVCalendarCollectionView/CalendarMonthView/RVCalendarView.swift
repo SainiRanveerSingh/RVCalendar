@@ -25,7 +25,9 @@ class RVCalendarView: UIView {
     
     //To Setup Event Dots With Specific Colors
     var dictDateEventColors = [String: [UIColor]]()
+    //Date selector Highlighter color
     var colorForDateSelection = UIColor.green
+    
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -100,7 +102,7 @@ extension RVCalendarView {
 }
 
 extension RVCalendarView: CalendarCollectionDelegate {
-    
+   
     func currentMonth(nameText: String) {
         labelCurrentMonth?.text = nameText
     }
@@ -117,5 +119,14 @@ extension RVCalendarView: CalendarCollectionDelegate {
         print(dateString)
         monthViewCalendarDelegate?.monthViewSelected(dateString: dateString)
     }
+    
+    func newCalendarMonth(date: Date) {
+        monthViewCalendarDelegate?.monthViewMonthChangedTo(newDate: date)
+    }
+    
+    func newMonthCalendar(height: CGFloat) {
+        //monthViewCalendarDelegate?.monthViewNewMonthCalendar(height: height)
+    }
+    
     
 }

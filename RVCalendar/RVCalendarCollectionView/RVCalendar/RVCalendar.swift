@@ -19,7 +19,13 @@ class RVCalendar: UIView {
     @IBOutlet weak var calendarWeekViewHeightConstraint: NSLayoutConstraint?
     @IBOutlet weak var calendarWeekView: CalendarWeekView!
 
+    var heightOfMonthCalendar = 433.0
+    
     var dateCurrentlySelectedOnCalendar = ""
+    
+    //Calendar Month Changed
+    var calendarNewMonthDate: Date?
+    
     var rvCalendarDelegate: RVCalendarDelegate?
     
     required init?(coder: NSCoder) {
@@ -42,8 +48,10 @@ class RVCalendar: UIView {
     private func initialSetup() {
         segmentButtonWeekMonth.selectedSegmentIndex = 1
         labelCalendarViewType.text = "Calendar View"
+        
         calendarWeekView.isHidden = true
         calendarWeekView.weekViewCalendarDelegate = self
+        
         calendarMonthView.monthViewCalendarDelegate = self
         calendarMonthView.clipsToBounds = true
         calendarMonthView.layer.cornerRadius = 15.0
@@ -55,20 +63,35 @@ class RVCalendar: UIView {
             labelCalendarViewType.text = "List View"
             toggleViews(showWeekView: true)
             
+            if calendarNewMonthDate != nil {
+                calendarWeekView.calendarMonthChanged(newMonthDate: calendarNewMonthDate!)
+            }
+            
             //Set Current Date Selected For Month Date On Both The View Type In Case New Date Is Selected On Any Calendar View Type
             if dateCurrentlySelectedOnCalendar != "" {
                 calendarWeekView.reloadWeekViewFor(selectedNewDate: dateCurrentlySelectedOnCalendar)
+                let formatter = DateFormatter()
+                formatter.dateFormat = "dd/MM/yyyy"
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                formatter.timeZone = TimeZone.current //
+                if let dateValue = formatter.date(from: dateCurrentlySelectedOnCalendar) {
+                    calendarWeekView.showWeekFor(selectedDate: dateValue)
+                }
             }
+            
         } else {
             //To switch from Month View to Week View:
             labelCalendarViewType.text = "Calendar View"
             toggleViews(showWeekView: false)
             
-            //Set Current Date Selected For Month Date On Both The View Type In Case New Date Is Selected On Any Calendar View Type            
+            //Set Current Date Selected For Month Date On Both The View Type In Case New Date Is Selected On Any Calendar View Type
             if dateCurrentlySelectedOnCalendar != "" {
                 calendarMonthView.reloadMonthViewFor(newSelectedDate: dateCurrentlySelectedOnCalendar)
             }
             
+            if calendarNewMonthDate != nil {
+                calendarMonthView.calendarView?.reloadCalendarFor(dateValue: calendarNewMonthDate!)
+            }
         }
     }
     
@@ -127,6 +150,11 @@ extension RVCalendar: CalendarWeekViewDelegate {
         rvCalendarDelegate?.selectedDate(stringValue: dateString)
         dateCurrentlySelectedOnCalendar = dateString
     }
+    
+    func weekViewMonthChangedTo(newDate: Date) {
+        calendarNewMonthDate = newDate
+        //calendarMonthView.calendarView?.reloadCalendarFor(dateValue: newDate)
+    }
 }
 
 extension RVCalendar: CalendarMonthViewDelegate {
@@ -134,5 +162,19 @@ extension RVCalendar: CalendarMonthViewDelegate {
         print(dateString)
         rvCalendarDelegate?.selectedDate(stringValue: dateString)
         dateCurrentlySelectedOnCalendar = dateString
+    }
+    
+    func monthViewMonthChangedTo(newDate: Date) {
+        calendarNewMonthDate = newDate
+        //calendarWeekView.calendarMonthChanged(newMonthDate: newDate)
+    }
+    
+    func monthViewNewMonthCalendar(height: CGFloat) {
+        //433 Full View Height
+        //40 Space for Calendar Type Label And Segment Button
+        //112 + 32 = 144 Space In Calendar View From Top And Bottom
+        let newHeight = height + 40.0 + 144.0
+        heightOfMonthCalendar = newHeight
+        //rvCalendarDelegate?.updateHeightTo(newHeight: newHeight)
     }
 }
