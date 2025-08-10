@@ -70,22 +70,6 @@ class RVCalendarCollectionViewCell: UICollectionViewCell {
         viewDateEventDotFive.isHidden = true
     }
     
-    func setEventDotOne(color: UIColor) {
-        viewDateEventDotOne.backgroundColor = color
-    }
-    
-    func setEventDotTwo(color: UIColor) {
-        viewDateEventDotTwo.backgroundColor = color
-    }
-    
-    func setEventDotThree(color: UIColor) {
-        viewDateEventDotThree.backgroundColor = color
-    }
-    
-    func setEventDotFour(color: UIColor) {
-        viewDateEventDotFour.backgroundColor = color
-    }
-    
     func setEventDateDotsWith(colors: [UIColor]) {
         viewMainDateEventDots.isHidden = false
         

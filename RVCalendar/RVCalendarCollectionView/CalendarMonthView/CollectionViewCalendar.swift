@@ -20,7 +20,9 @@ class CollectionViewCalendar:  UICollectionView {
     var calendarDelegate: CalendarCollectionDelegate?
     var dateSelectionColor = UIColor.white
     var dictArrayDateEventColors = [String: [UIColor]]()
-//    var arrayDateEventColors = [UIColor]()
+    
+    var dateSelectedByUserOnMonthCalendar = ""
+    var indexPathForNewSelectedDate: IndexPath?
     
     var nextMonthName: String {
         let nextDate = CalendarHelper.shared.getNextMonth(from: selectedDate)
@@ -123,6 +125,10 @@ class CollectionViewCalendar:  UICollectionView {
         setupMonthView()
     }
     
+    func reloadMonthViewFor(selectedNewDate: String) {
+        dateSelectedByUserOnMonthCalendar = selectedNewDate
+        self.reloadData()        
+    }
     
 }
 
@@ -135,22 +141,25 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = self.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
         
+        cell.viewDateLabelSelection.backgroundColor = .white
         cell.configure(with: totalDays[indexPath.item], index: indexPath.item)
         
+        
         if cell.labelDate.text != "" {
+            let currentCellDate = getDateForSelectedCell(atIndex: indexPath.item)
             if dictArrayDateEventColors.count > 0 {
-                let currentCellDate = getDateForSelectedCell(atIndex: indexPath.item)
                 if let arrayColors = dictArrayDateEventColors[currentCellDate] {
                     cell.setEventDateDotsWith(colors: arrayColors)
                 }
             }
+            if currentCellDate == dateSelectedByUserOnMonthCalendar {
+                cell.viewDateLabelSelection.clipsToBounds = true
+                cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
+                cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+                indexPathForNewSelectedDate = indexPath
+            }
         }
         
-        if cellSelectedToHighlight != -1 {
-            cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
-        } else {
-            cell.viewDateLabelSelection.backgroundColor = .white
-        }
         return cell
     }
     
@@ -163,8 +172,17 @@ extension CollectionViewCalendar: UICollectionViewDelegate, UICollectionViewData
                 cell.viewDateLabelSelection.clipsToBounds = true
                 cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
                 cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+                //--
+                if indexPathForNewSelectedDate != nil && indexPathForNewSelectedDate != indexPath {
+                    if let previousCell = collectionView.cellForItem(at: indexPathForNewSelectedDate!) as? RVCalendarCollectionViewCell {
+                        previousCell.viewDateLabelSelection.backgroundColor = .clear
+                        indexPathForNewSelectedDate = nil
+                    }
+                }
+                //--
                 let selectedDateValue = getDateForSelectedCell(atIndex: indexPath.item)
                 //print("Selected Date: \(selectedDateValue)")
+                dateSelectedByUserOnMonthCalendar = selectedDateValue
                 calendarDelegate?.dateSelected(dateString: selectedDateValue)
             }
         }

@@ -19,7 +19,7 @@ class RVCalendar: UIView {
     @IBOutlet weak var calendarWeekViewHeightConstraint: NSLayoutConstraint?
     @IBOutlet weak var calendarWeekView: CalendarWeekView!
 
-    
+    var dateCurrentlySelectedOnCalendar = ""
     var rvCalendarDelegate: RVCalendarDelegate?
     
     required init?(coder: NSCoder) {
@@ -54,10 +54,21 @@ class RVCalendar: UIView {
             //To switch from Week View to Month View:
             labelCalendarViewType.text = "List View"
             toggleViews(showWeekView: true)
+            
+            //Set Current Date Selected For Month Date On Both The View Type In Case New Date Is Selected On Any Calendar View Type
+            if dateCurrentlySelectedOnCalendar != "" {
+                calendarWeekView.reloadWeekViewFor(selectedNewDate: dateCurrentlySelectedOnCalendar)
+            }
         } else {
             //To switch from Month View to Week View:
             labelCalendarViewType.text = "Calendar View"
             toggleViews(showWeekView: false)
+            
+            //Set Current Date Selected For Month Date On Both The View Type In Case New Date Is Selected On Any Calendar View Type            
+            if dateCurrentlySelectedOnCalendar != "" {
+                calendarMonthView.reloadMonthViewFor(newSelectedDate: dateCurrentlySelectedOnCalendar)
+            }
+            
         }
     }
     
@@ -68,9 +79,9 @@ class RVCalendar: UIView {
         let bounceDamping: CGFloat = 0.5
         let initialVelocity: CGFloat = 0.3
 
-        // Update Wek View constraint value
-        calendarWeekViewHeightConstraint?.constant = showWeekView ? 180 : 0 // or your desired height
-        calendarMonthViewHeightConstraint?.constant = showWeekView ? 0 : 433 // or your desired height
+        // Update Week View And Month View Height Constraint Value
+        calendarWeekViewHeightConstraint?.constant = showWeekView ? 180 : 0
+        calendarMonthViewHeightConstraint?.constant = showWeekView ? 0 : 433
         
         let newHeight = showWeekView ? 220.0 : 473.0
         rvCalendarDelegate?.updateHeightTo(newHeight: newHeight)
@@ -114,6 +125,7 @@ extension RVCalendar: CalendarWeekViewDelegate {
     func dateSelected(dateString: String) {
         print(dateString)
         rvCalendarDelegate?.selectedDate(stringValue: dateString)
+        dateCurrentlySelectedOnCalendar = dateString
     }
 }
 
@@ -121,5 +133,6 @@ extension RVCalendar: CalendarMonthViewDelegate {
     func monthViewSelected(dateString: String) {
         print(dateString)
         rvCalendarDelegate?.selectedDate(stringValue: dateString)
+        dateCurrentlySelectedOnCalendar = dateString
     }
 }

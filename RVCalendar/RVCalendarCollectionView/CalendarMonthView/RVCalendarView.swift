@@ -65,6 +65,10 @@ class RVCalendarView: UIView {
         calendarView?.reloadData()
     }
     
+    func reloadMonthViewFor(newSelectedDate: String) {
+        calendarView?.reloadMonthViewFor(selectedNewDate: newSelectedDate)
+    }
+    
     func setupCalendarHeaders() {
         let monthLabelText = CalendarHelper().monthYearString(date: selectedDate)
         let previousMonth = CalendarHelper.shared.getPreviousMonth(from: selectedDate)

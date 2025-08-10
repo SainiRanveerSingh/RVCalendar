@@ -33,6 +33,10 @@ class CalendarWeekView: UIView {
    
     private var selectedDate = Date()
     
+    var dateSelectedByUserOnCalendar = ""
+    var indexPathForNewSelectedDateByUser: IndexPath?
+    
+    
     var weekViewCalendarDelegate: CalendarWeekViewDelegate?
     
     //To Setup Event Dots With Specific Colors
@@ -69,6 +73,13 @@ class CalendarWeekView: UIView {
         
         setupWeekView()
         setupCollectionViewLayout()
+        setupCalendarHeaders()
+    }
+    
+    func calendarMonthChanged(newMonthDate: Date) {
+        selectedMonthDate = newMonthDate
+        selectedStartDate = CalendarHelper().startOfWeek(from: newMonthDate)
+        setupWeekView()
         setupCalendarHeaders()
     }
     
@@ -140,6 +151,8 @@ class CalendarWeekView: UIView {
                 selectedMonthDate = nextMonthDate
                 let newWeeks = generateWeeks(for: selectedMonthDate)
                 allWeeks.append(contentsOf: newWeeks)
+                
+                //Delegate Call For Next Month
             }
         }
         
@@ -160,6 +173,8 @@ class CalendarWeekView: UIView {
                 
                 // Shift currentWeekIndex forward by newWeeks.count
                 currentWeekIndex += newWeeks.count
+                
+                //Delegate Call For Previous Month
             }
         }
         
@@ -223,10 +238,14 @@ class CalendarWeekView: UIView {
             updateMonthLabel(using: visibleDate)
         }
 
-        
         //self.setupCalendarHeaders()
         cellSelectedToHighlight = -1
         calendarWeekView?.reloadData()
+    }
+    
+    func reloadWeekViewFor(selectedNewDate: String) {
+        dateSelectedByUserOnCalendar = selectedNewDate
+        calendarWeekView?.reloadData()        
     }
     
     func updateMonthLabel(using date: Date) {
@@ -251,7 +270,7 @@ class CalendarWeekView: UIView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumInteritemSpacing = 0 // space between columns (horizontal spacing)
-        layout.minimumLineSpacing = 2       // 🔽 space between rows (vertical spacing)
+        layout.minimumLineSpacing = 2       // space between rows (vertical spacing)
 
         let totalWidth = self.bounds.width
         let cellWidth = totalWidth / 7
@@ -279,6 +298,7 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = calendarWeekView?.dequeueReusableCell(withReuseIdentifier: "RVCalendarCollectionViewCell", for: indexPath) as! RVCalendarCollectionViewCell
         
+        cell.viewDateLabelSelection.backgroundColor = .clear
         if let date = currentWeek[indexPath.item] {
             //let date = weekDates[indexPath.item]
             let formatter = DateFormatter()
@@ -292,20 +312,26 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
             cell.labelDate.textColor = .clear // or inactive color
         }
         
+        
         if cell.labelDate.text != "" {
+            let currentCellDate = getDateForSelectedCell(atIndex: indexPath.item)
+            cell.viewMainDateEventDots.isHidden = true
             if dictDateEventArrayColors.count > 0 {
-                let currentCellDate = getDateForSelectedCell(atIndex: indexPath.item)
                 if let arrayColors = dictDateEventArrayColors[currentCellDate] {
                     cell.setEventDateDotsWith(colors: arrayColors)
                 }
             }
+            if currentCellDate == dateSelectedByUserOnCalendar {
+                cell.viewDateLabelSelection.clipsToBounds = true
+                cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
+                cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+                indexPathForNewSelectedDateByUser = indexPath
+            }
+        } else {
+            cell.viewMainDateEventDots.isHidden = true
         }
         
-        if cellSelectedToHighlight != -1 {
-            cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
-        } else {
-            cell.viewDateLabelSelection.backgroundColor = .clear
-        }
+        //--
         return cell
     }
     
@@ -318,10 +344,19 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
                 cell.viewDateLabelSelection.clipsToBounds = true
                 cell.viewDateLabelSelection.layer.cornerRadius = cell.viewDateLabelSelection.frame.height / 2.0
                 cell.viewDateLabelSelection.backgroundColor = dateSelectionColor
+                //--
+                if indexPathForNewSelectedDateByUser != nil && indexPathForNewSelectedDateByUser != indexPath {
+                    if let previousCell = collectionView.cellForItem(at: indexPathForNewSelectedDateByUser!) as? RVCalendarCollectionViewCell {
+                        previousCell.viewDateLabelSelection.backgroundColor = .clear
+                        indexPathForNewSelectedDateByUser = nil
+                    }
+                }
+                //--
                 let selectedDateValue = getDateForSelectedCell(atIndex: indexPath.item)
-                print("Selected Date: \(selectedDateValue)")
+                //print("Selected Date: \(selectedDateValue)")
 
                 //MARK: - Delegate Method For Date Selection -
+                dateSelectedByUserOnCalendar = selectedDateValue
                 weekViewCalendarDelegate?.dateSelected(dateString: selectedDateValue)
             }
         }
@@ -332,7 +367,7 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
         if let cell = collectionView.cellForItem(at: indexPath) as? RVCalendarCollectionViewCell {
             cellSelectedToHighlight = -1
             cell.labelDate.textColor = .black
-            cell.viewDateLabelSelection.backgroundColor = .white
+            cell.viewDateLabelSelection.backgroundColor = .clear
         }
     }
     
@@ -362,6 +397,7 @@ extension CalendarWeekView: UICollectionViewDelegate, UICollectionViewDataSource
         
         return ""
     }
+    
 }
 
 
