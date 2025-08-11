@@ -55,6 +55,33 @@ class RVCalendar: UIView {
         calendarMonthView.monthViewCalendarDelegate = self
         calendarMonthView.clipsToBounds = true
         calendarMonthView.layer.cornerRadius = 15.0
+        
+        setupSegmentButton()
+    }
+    
+    func setupSegmentButton() {
+        //let items = [UIImage(named: "CalendarListBlackIcon")!, UIImage(named: "CalendarMonthBlackIcon")!]
+        segmentButtonWeekMonth.setImage(UIImage(named: "CalendarListBlackIcon"), forSegmentAt: 0)
+        segmentButtonWeekMonth.setImage(UIImage(named: "CalendarMonthBlackIcon"), forSegmentAt: 1)
+        //UISegmentedControl(items: items)
+        segmentButtonWeekMonth.selectedSegmentIndex = 0
+        
+        // Tint color (selected segment background) — Light Purple
+        segmentButtonWeekMonth.selectedSegmentTintColor = UIColor.white //UIColor(red: 219/255, green: 213/255, blue: 255/255, alpha: 1.0)
+        //216,184,238
+        //167 095 255
+        // Segment icon tint (unselected color)
+        segmentButtonWeekMonth.setTitleTextAttributes([.foregroundColor: UIColor.black], for: .normal)
+        
+        // Segment icon tint (selected color)
+        segmentButtonWeekMonth.setTitleTextAttributes([.foregroundColor: UIColor(red: 162/255, green: 136/255, blue: 253/255, alpha: 1.0)], for: .selected)
+        
+        // Border (optional)
+        segmentButtonWeekMonth.layer.borderColor = UIColor(red: 162/255, green: 136/255, blue: 253/255, alpha: 1.0).cgColor
+        segmentButtonWeekMonth.layer.borderWidth = 1
+        segmentButtonWeekMonth.layer.cornerRadius = 22
+        segmentButtonWeekMonth.clipsToBounds = true
+        segmentButtonWeekMonth.translatesAutoresizingMaskIntoConstraints = false
     }
     
     @IBAction func buttonSegmentChanged(_ sender: UISegmentedControl) {
