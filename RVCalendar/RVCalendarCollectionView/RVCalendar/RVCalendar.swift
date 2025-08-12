@@ -63,24 +63,29 @@ class RVCalendar: UIView {
         calendarMonthView.layer.cornerRadius = 15.0
         
         setupSegmentButton()
-    }    
-    
-    public func setCalendar(viewType: CalendarViewType) {
-        if viewType == .WeekView {
-            segmentButtonWeekMonth.selectedSegmentIndex = 0
-            labelCalendarViewType.text = "List View"
-            calendarWeekView.isHidden = false
-            calendarMonthView.isHidden = true
-            calendarViewType = .WeekView
-        } else {
-            //Month View
-            segmentButtonWeekMonth.selectedSegmentIndex = 1
-            labelCalendarViewType.text = "Calendar View"
-            calendarWeekView.isHidden = true
-            calendarViewType = .MonthView
-        }
     }
     
+    public func setCalendar(viewType: CalendarViewType) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if viewType == .WeekView {
+                self.segmentButtonWeekMonth.selectedSegmentIndex = 0
+                self.labelCalendarViewType.text = "List View"
+                self.calendarWeekView.isHidden = false
+                self.calendarMonthView.isHidden = true
+                self.calendarViewType = .WeekView
+                self.buttonSegmentChanged(self.segmentButtonWeekMonth)
+                self.calendarMonthView.buttonNextMonth(UIButton())
+                self.calendarMonthView.buttonPreviousMonth(UIButton())
+            } else {
+                //Month View
+                self.segmentButtonWeekMonth.selectedSegmentIndex = 1
+                self.labelCalendarViewType.text = "Calendar View"
+                self.calendarWeekView.isHidden = true
+                self.calendarViewType = .MonthView
+            }
+        }
+    }
     
     func setupSegmentButton() {
         //let items = [UIImage(named: "CalendarListBlackIcon")!, UIImage(named: "CalendarMonthBlackIcon")!]
@@ -147,28 +152,21 @@ class RVCalendar: UIView {
     
     
     private func toggleViews(showWeekView: Bool) {
-        // Bounce animation constants
-        let animationDuration = 0.6
-        let bounceDamping: CGFloat = 0.5
-        let initialVelocity: CGFloat = 0.3
-
-        // Update Week View And Month View Height Constraint Value
-        calendarWeekViewHeightConstraint?.constant = showWeekView ? 180 : 0
-        calendarMonthViewHeightConstraint?.constant = showWeekView ? 0 : 433
-        
-        let newHeight = showWeekView ? 220.0 : 473.0
-        rvCalendarDelegate?.updateHeightTo(newHeight: newHeight)
-        
-        // Unhide both views during animation
-        calendarMonthView.isHidden = false
-        calendarWeekView.isHidden = false
+        // Animation constants
+        let animationDuration = 0.2
 
         UIView.animate(withDuration: animationDuration,
                        delay: 0,
-                       usingSpringWithDamping: bounceDamping,
-                       initialSpringVelocity: initialVelocity,
                        options: [.curveEaseIn],
                        animations: {
+            //--
+            // Update Week View And Month View Height Constraint Value
+            self.calendarWeekViewHeightConstraint?.constant = showWeekView ? 180 : 0
+            self.calendarMonthViewHeightConstraint?.constant = showWeekView ? 0 : 433
+            
+            let newHeight = showWeekView ? 220.0 : 486.0
+            self.rvCalendarDelegate?.updateHeightTo(newHeight: newHeight)
+            //--
             self.calendarMonthView.alpha = showWeekView ? 0 : 1
             self.calendarWeekView.alpha = showWeekView ? 1 : 0
             self.layoutIfNeeded()
