@@ -27,6 +27,11 @@ class RVCalendar: UIView {
     var calendarNewMonthDate: Date?
     
     var rvCalendarDelegate: RVCalendarDelegate?
+    enum CalendarViewType {
+        case WeekView
+        case MonthView
+    }
+    public var calendarViewType: CalendarViewType = .MonthView
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -48,6 +53,7 @@ class RVCalendar: UIView {
     private func initialSetup() {
         segmentButtonWeekMonth.selectedSegmentIndex = 1
         labelCalendarViewType.text = "Calendar View"
+        calendarViewType = .MonthView
         
         calendarWeekView.isHidden = true
         calendarWeekView.weekViewCalendarDelegate = self
@@ -57,7 +63,24 @@ class RVCalendar: UIView {
         calendarMonthView.layer.cornerRadius = 15.0
         
         setupSegmentButton()
+    }    
+    
+    public func setCalendar(viewType: CalendarViewType) {
+        if viewType == .WeekView {
+            segmentButtonWeekMonth.selectedSegmentIndex = 0
+            labelCalendarViewType.text = "List View"
+            calendarWeekView.isHidden = false
+            calendarMonthView.isHidden = true
+            calendarViewType = .WeekView
+        } else {
+            //Month View
+            segmentButtonWeekMonth.selectedSegmentIndex = 1
+            labelCalendarViewType.text = "Calendar View"
+            calendarWeekView.isHidden = true
+            calendarViewType = .MonthView
+        }
     }
+    
     
     func setupSegmentButton() {
         //let items = [UIImage(named: "CalendarListBlackIcon")!, UIImage(named: "CalendarMonthBlackIcon")!]
